@@ -16,10 +16,10 @@ var serialize = multiSelect.serialize;
 var set = mutations.set;
 var get = mutations.get;
 
-var candidate1 = Candidate({id: 1, name: "Billy"});
-var candidate2 = Candidate({id: 2, name: "Tommy"});
-var candidate3 = Candidate({id: 3, name: "Jesse"});
-var candidate4 = Candidate({id: 4, name: "Molly"});
+var candidate1 = Candidate({id: 1, value: "Billy"});
+var candidate2 = Candidate({id: 2, value: "Tommy"});
+var candidate3 = Candidate({id: 3, value: "Jesse"});
+var candidate4 = Candidate({id: 4, value: "Molly"});
 
 var candidates = [
   candidate1,
@@ -43,6 +43,33 @@ var nested = {
     name: "Steven" 
   }
 };
+
+test("creating a Widget with search returns correct list of matches", function (t) {
+  t.plan(2);
+  var widget = Widget({
+    name: "friends",
+    focused: true,
+    search: "ll",
+    candidates: candidates,
+    selections: selections
+  });
+
+  t.same(candidate1, widget.matches[0], "ll matches Billy");
+  t.same(candidate4, widget.matches[1], "ll matches Molly");
+});
+
+test("creating Widget with empty search returns all candidates as matches", function (t) {
+  t.plan(1);
+  var widget = Widget({
+    name: "friends",
+    focused: true,
+    search: "",
+    candidates: candidates,
+    selections: selections
+  });
+
+  t.same(widget.matches, candidates, "empty search returns all matches");
+} );
 
 test("addSelection adds provided id to selections if id in candidates", function (t) {
   t.plan(3);
@@ -70,11 +97,13 @@ test("removeLastSelection removes last selection", function (t) {
   t.ok(ms !== withoutSelection, "removeSelection returns new object");
 });
 
-test("updateSearch returns widget with new search value", function (t) {
-  t.plan(2);
-  var newSearch = updateSearch(ms, "data...");
+test("updateSearch returns widget with new search and matches values", function (t) {
+  t.plan(4);
+  var newSearch = updateSearch(ms, "ll");
 
-  t.same(get(newSearch, "search"), "data...", "search updated correctly");
+  t.same(get(newSearch, "search"), "ll", "search updated correctly");
+  t.same(candidate1, newSearch.matches[0], "ll matches Billy");
+  t.same(candidate4, newSearch.matches[1], "ll matches Molly");
   t.ok(ms !== newSearch, "updateSearch returns new object");
 });
 
@@ -88,11 +117,12 @@ test("focus changes the value of focus", function (t) {
   t.ok(ms !== isntFocused, "focues returns new object");
 });
 
-test("clearSearch clears the search value", function (t) {
-  t.plan(2);
+test("clearSearch clears the search value and updates matches", function (t) {
+  t.plan(3);
   var cleared = clearSearch(ms);
 
   t.same(get(cleared, "search"), "", "search was cleared");
+  t.same(cleared.matches.length, 4, "empty search means all candidates are matches");
   t.ok(ms !== cleared, "clearSearch returns new object");
 });
 

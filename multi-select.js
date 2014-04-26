@@ -4,32 +4,42 @@ var pluck = _.pluck;
 var contains = _.contains;
 var without = _.without;
 var initial = _.initial;
+var reduce = _.reduce;
+var filter = _.filter;
 var mutations = require('./functional-mutations');
 var helpers = require('./array-helpers');
 var get = mutations.get;
 var set = mutations.set;
 
+//helper used to calculate which candidates are matches based on string
+var calculateMatches = function (string, candidates) {
+  return reduce(candidates, function (matches, candidate) {
+    return candidate.value.indexOf(string) > -1 
+      ? matches.concat(cloneDeep(candidate))
+      : matches;
+  }, []);
+};
+
 //Struct definition.  No member functions/methods
 var Candidate = function Candidate (props) {
   if (!(this instanceof Candidate)) return new Candidate(props);
   if (!props.id) throw new Error("Must provide id");  
-  if (!props.name) throw new Error("Must provide name");  
 
   this.id = props.id;
-  this.name = props.name;
-  this.content = props.content || props.name;
+  this.value = props.value || this.id;
+  this.content = props.content || this.value;
   return this;
 };
 
 //Struct definition.  No member functions/methods
 var Widget = function Widget (props) {
   if (!(this instanceof Widget)) return new Widget(props);
-  if (props.focused === undefined) throw new Error("Must provide focused boolean");
 
   this.name = props.name;
-  this.focused = props.focused;
+  this.focused = props.focused || false;
   this.search = props.search || "";
   this.candidates = props.candidates || [];
+  this.matches = calculateMatches(this.search, this.candidates);
   this.selections = props.selections || [];
   return this;
 };
@@ -61,7 +71,10 @@ var removeLastSelection = function (widget) {
 
 //Widget, String -> Widget
 var updateSearch = function (widget, search) {
-  return set(widget, {search: search});
+  return set(widget, {
+    search: search,
+    matches: calculateMatches(search, widget.candidates)
+  });
 };
 
 //Widget, Boolean -> Widget
@@ -71,7 +84,10 @@ var focus = function (widget, focused) {
 
 //Widget -> Widget
 var clearSearch = function (widget) {
-  return set(widget, {search: ""});
+  return set(widget, {
+    search: "",
+    matches: calculateMatches("", widget.candidates)
+  });
 };
 
 //Widget -> Widget
