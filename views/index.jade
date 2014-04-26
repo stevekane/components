@@ -1,0 +1,24 @@
+doctype html
+html(lang=en)
+  head
+    title Component examples
+  body
+    h1 Welcome to component examples
+
+    #ember
+      h2 ember.js
+    #react
+      h2 react.js
+    #backbone
+      h2 backbone.js
+    #mithril
+      h2 mithril.js
+
+    script(src="/vendor/jquery.js")
+    script(src="/vendor/handlebars.js")
+    script(src="/vendor/ember.js")
+    script(src="/dist/templates.js")
+    script(src="/dist/components.js")
+
+  script(type="text/x-handlebars")
+    {{forms-multiselect candidates=candidates name="games"}}

@@ -1,0 +1,17 @@
+{{forms-input 
+  value=widget.search
+  action="addSelection"
+  focus="focus"
+  unfocus="unfocus"}}
+
+{{widget.search}}
+
+{{#if widget.focused}}
+<ul class="selections">
+  {{#each widget.selections}}
+    {{id}}
+  {{else}}
+    <li>no selections</li>
+  {{/each}}
+</ul>
+{{/if}}
