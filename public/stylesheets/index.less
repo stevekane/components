@@ -11,6 +11,7 @@
 
 * {
   box-sizing: border-box;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 html, body {
@@ -37,12 +38,12 @@ li {
 
 .ms-wrapper {
   width: 90%;
-  input {
+  input.ms-input {
     .size(100%, 32px);
   }
-  .dropdown {
+  .ms-dropdown {
     width: 100%;
-    li {
+    .ms-match {
       .size(100%, 32px);
       padding-top: .2em;
       font-size: 1.2em;
@@ -59,5 +60,26 @@ li {
       }
     }
   }
-
+  .ms-tags {
+    min-height: 32px;
+    background-color: @light-gray;  
+    padding: 4px;
+    .ms-tag {
+      display: inline-block;
+      height: 24px;
+      max-width: 90%
+      line-height: 24px;
+      padding-left: 4px;
+      padding-right: 4px;
+      text-align: bottom;
+      color: white;
+      background-color: gray;
+    }
+    .ms-no-tag {
+      height: 24px;
+      line-height: 24px;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
 }

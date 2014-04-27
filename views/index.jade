@@ -13,15 +13,24 @@ html(lang=en)
           #static
             h2 static
             .ms-wrapper
-              input
-              ul.dropdown
-                li Bobby
-                li Susie 
-                li Jimmy 
-              ul.tags
-                li.tag
+              ul.ms-tags
+                li.ms-tag
                   | Bobby 
-                  i.glyphicon.glyphicon-remove
+                  span.glyphicon.glyphicon-remove
+                li.ms-tag
+                  | Bobby 
+                  span.glyphicon.glyphicon-remove
+                li.ms-tag
+                  | Bobby 
+                  span.glyphicon.glyphicon-remove
+                li.ms-tag
+                  | Bobby 
+                  span.glyphicon.glyphicon-remove
+              input.ms-input(placeholder="Choose a friend")
+              ul.ms-dropdown
+                li.ms-match Bobby
+                li.ms-match Susie 
+                li.ms-match Jimmy 
 
           #react
             h2 react.js
