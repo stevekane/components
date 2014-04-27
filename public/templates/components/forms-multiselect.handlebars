@@ -6,20 +6,21 @@
   focus="focus"
   unfocus="unfocus"}}
 
-{{widget.search}}
-
+<ul class="dropdown">
 {{#if widget.focused}}
-<ul class="matches">
   {{#each widget.matches}}
   <li>{{value}}</li>
   {{else}}
   <li>no matches</li>
   {{/each}}
-</ul>
 {{/if}}
+</ul>
 
-<ul class="selections">
+<ul class="tags">
   {{#each widget.selections}}
-  <li {{action "removeSelection" this}}>{{value}}</li>
+  <li class="tag">
+    {{value}}
+    <i class="glyphicon glyphicon-remove" {{action "removeSelection" this}}></i>
+  </li>
   {{/each}}
 </ul>

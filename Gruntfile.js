@@ -13,6 +13,18 @@ module.exports = function (grunt) {
       } 
     },
 
+    less: {
+      compile: {
+        options: {
+          paths: ["public/stylesheets", "public/vendor/bootstrap/less"]
+        },
+        files: {
+          "public/dist/index.css": "public/stylesheets/index.less"
+        }
+      } 
+    },
+     
+
     browserify: {
       dist: {
         files: {
@@ -29,6 +41,15 @@ module.exports = function (grunt) {
           livereload: true 
         }
       },
+
+      styles: {
+        files: "public/stylesheets/**/*.less",
+        tasks: ["less"],
+        options: {
+          livereload: true 
+        } 
+      },
+
       templates: {
         files: ["public/templates/**/*.handlebars"],
         tasks: ["emberTemplates"],
@@ -42,9 +63,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-ember-templates");
   grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-contrib-less");
   grunt.registerTask("default", [
     "emberTemplates", 
     "browserify",
+    "less",  
     "watch"
   ]);
 };
