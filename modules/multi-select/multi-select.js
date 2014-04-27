@@ -62,10 +62,10 @@ var Widget = function Widget (props) {
   return this;
 };
 
-//Widget, id -> Widget
+//Widget, id -> Widget  N.B. supports both candidate and none
 var addSelection = function (widget, candidate) {
-  var isValidSelection = contains(widget.candidates, candidate);
-  var selections = isValidSelection 
+  var candidate = candidate || widget.matches[widget.selectionIndex];
+  var selections = candidate
     ? widget.selections.concat(candidate)
     : widget.selections;
 
@@ -120,7 +120,7 @@ var clearSelections = function (widget) {
 
 //Widget -> [Candidates]
 var serialize = function (widget) {
-  var candidates = reduce(widget.candidates, function (candidate) {
+  var candidates = filter(widget.candidates, function (candidate) {
     return contains(widget.selections, candidate.id);
   });
   return cloneDeep(candidates);

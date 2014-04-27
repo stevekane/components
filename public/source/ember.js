@@ -1,43 +1,53 @@
-var ms = require("../../multi-select");
+var ms = require("../../modules/multi-select/multi-select");
 var candidates = require("../../candidates.json").candidates;
+var get = Ember.get;
+var set = Ember.set;
 
 var App = Ember.Application.create({
   rootElement: "#ember"
 });
 
 App.FormsInputComponent = Ember.TextField.extend({
-  focusIn: function () {
-    this.sendAction("focus");
-  },
-  focusOut: function () {
-    this.sendAction("unfocus");
-  },
+  updateValue: function () {
+    this.sendAction("update", this.value); 
+  }.observes("value"),
 });
 
 App.FormsMultiselectComponent = Ember.Component.extend({
   init: function () {
-    this.set("widget", {
+    set(this, "widget", ms.Widget({ 
       name: this.get("name"),
       search: this.get("search"),
-      selections: this.get("selection"),
-      candidates: this.get("candidates"),
+      candidates: candidates,
       focused: this.get("focused") || false
-    });
+    }));
     this._super(arguments);
   },
 
+  focusIn: function () {
+    set(this, "widget", ms.focus(this.widget, true)); 
+  },
+
+  focusOut: function () {
+    set(this, "widget", ms.focus(this.widget, false)); 
+  },
+
   actions: {
+    updateSearch: function (search) {
+      this.set("widget", ms.updateSearch(this.widget, search)); 
+    },
+
     addSelection: function (value) {
-      var widget = this.get('widget');
-      //this.set("widget", ms.addSelection(widget, 
+      set(this, "search", "");
+      set(this, "widget", ms.addSelection(this.widget));
     },
-    focus: function () {
-      var widget = this.get('widget');
-      this.set("widget", ms.focus(widget, true));
+
+    removeSelection: function (selection) {
+      set(this, "widget", ms.removeSelection(this.widget, selection));
     },
-    unfocus: function () {
-      var widget = this.get('widget');
-      this.set("widget", ms.focus(widget, false));
+
+    serialize: function (widget) {
+      console.log({matches: ms.serialize(widget)})
     }
   }
 });

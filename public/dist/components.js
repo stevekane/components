@@ -3,7 +3,7 @@ module.exports={
   "candidates": [
     {
       "id": "1",
-      "name": "Street Fighter IV",
+      "value": "Street Fighter IV",
       "content": {
         "nicknames": [
           "SSF4",
@@ -15,7 +15,7 @@ module.exports={
     },
     {
       "id": "2",
-      "name": "Ultimate Marvel vs Capcom III",
+      "value": "Ultimate Marvel vs Capcom III",
       "content": {
         "nicknames": [
           "Mahvel",
@@ -27,7 +27,7 @@ module.exports={
     },
     {
       "id": "3",
-      "name": "Super Smash Brothers Melee",
+      "value": "Super Smash Brothers Melee",
       "content": {
         "nicknames": [
           "Smash",
@@ -105,10 +105,10 @@ var Widget = function Widget (props) {
   return this;
 };
 
-//Widget, id -> Widget
+//Widget, id -> Widget  N.B. supports both candidate and none
 var addSelection = function (widget, candidate) {
-  var isValidSelection = contains(widget.candidates, candidate);
-  var selections = isValidSelection 
+  var candidate = candidate || widget.matches[widget.selectionIndex];
+  var selections = candidate
     ? widget.selections.concat(candidate)
     : widget.selections;
 
@@ -163,7 +163,7 @@ var clearSelections = function (widget) {
 
 //Widget -> [Candidates]
 var serialize = function (widget) {
-  var candidates = reduce(widget.candidates, function (candidate) {
+  var candidates = filter(widget.candidates, function (candidate) {
     return contains(widget.selections, candidate.id);
   });
   return cloneDeep(candidates);
@@ -184,7 +184,8 @@ module.exports.serialize = serialize;
 module.exports.set = set;
 
 },{"lodash":3}],3:[function(require,module,exports){
-(function (global){/**
+(function (global){
+/**
  * @license
  * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
  * Build: `lodash modern -o ./dist/lodash.js`
@@ -6969,50 +6970,61 @@ module.exports.set = set;
     root._ = _;
   }
 }.call(this));
+
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
-var ms = require("../../multi-select");
+var ms = require("../../modules/multi-select/multi-select");
 var candidates = require("../../candidates.json").candidates;
+var get = Ember.get;
+var set = Ember.set;
 
 var App = Ember.Application.create({
   rootElement: "#ember"
 });
 
 App.FormsInputComponent = Ember.TextField.extend({
-  focusIn: function () {
-    this.sendAction("focus");
-  },
-  focusOut: function () {
-    this.sendAction("unfocus");
-  },
+  updateValue: function () {
+    this.sendAction("update", this.value); 
+  }.observes("value"),
 });
 
 App.FormsMultiselectComponent = Ember.Component.extend({
   init: function () {
-    this.set("widget", {
+    set(this, "widget", ms.Widget({ 
       name: this.get("name"),
       search: this.get("search"),
-      selections: this.get("selection"),
-      candidates: this.get("candidates"),
+      candidates: candidates,
       focused: this.get("focused") || false
-    });
+    }));
     this._super(arguments);
   },
 
+  focusIn: function () {
+    set(this, "widget", ms.focus(this.widget, true)); 
+  },
+
+  focusOut: function () {
+    set(this, "widget", ms.focus(this.widget, false)); 
+  },
+
   actions: {
+    updateSearch: function (search) {
+      this.set("widget", ms.updateSearch(this.widget, search)); 
+    },
+
     addSelection: function (value) {
-      var widget = this.get('widget');
-      //this.set("widget", ms.addSelection(widget, 
+      set(this, "search", "");
+      set(this, "widget", ms.addSelection(this.widget));
     },
-    focus: function () {
-      var widget = this.get('widget');
-      this.set("widget", ms.focus(widget, true));
+
+    removeSelection: function (selection) {
+      set(this, "widget", ms.removeSelection(this.widget, selection));
     },
-    unfocus: function () {
-      var widget = this.get('widget');
-      this.set("widget", ms.focus(widget, false));
+
+    serialize: function (widget) {
+      console.log({matches: ms.serialize(widget)})
     }
   }
 });
 
-},{"../../candidates.json":1,"../../multi-select":2}]},{},[4])
+},{"../../candidates.json":1,"../../modules/multi-select/multi-select":2}]},{},[4])

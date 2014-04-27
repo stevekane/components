@@ -13,7 +13,22 @@ module.exports = function (grunt) {
       } 
     },
 
+    browserify: {
+      dist: {
+        files: {
+          "public/dist/components.js": ["public/source/ember.js"]
+        }
+      } 
+    },
+
     watch: {
+      scripts: {
+        files: ["public/source/**/*.js", "modules/**/*.js"], 
+        tasks: ["browserify"],
+        options: {
+          livereload: true 
+        }
+      },
       templates: {
         files: ["public/templates/**/*.handlebars"],
         tasks: ["emberTemplates"],
@@ -25,9 +40,11 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks("grunt-ember-templates");
+  grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.registerTask("default", [
     "emberTemplates", 
+    "browserify",
     "watch"
   ]);
 };

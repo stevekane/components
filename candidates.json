@@ -2,7 +2,7 @@
   "candidates": [
     {
       "id": "1",
-      "name": "Street Fighter IV",
+      "value": "Street Fighter IV",
       "content": {
         "nicknames": [
           "SSF4",
@@ -14,7 +14,7 @@
     },
     {
       "id": "2",
-      "name": "Ultimate Marvel vs Capcom III",
+      "value": "Ultimate Marvel vs Capcom III",
       "content": {
         "nicknames": [
           "Mahvel",
@@ -26,7 +26,7 @@
     },
     {
       "id": "3",
-      "name": "Super Smash Brothers Melee",
+      "value": "Super Smash Brothers Melee",
       "content": {
         "nicknames": [
           "Smash",

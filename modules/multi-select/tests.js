@@ -147,6 +147,8 @@ test("addSelection adds provided id to selections if id in candidates", function
   t.ok(ms !== widget, "addSelection returns new object");
 });
 
+//TODO: ADD A TEST FOR providing no candidate to addSelection
+
 test("addSelection does nothing if id of candidate isnt in candidates", function (t) {
   t.plan(2);
   var fakeCandidate = {

@@ -1,17 +1,27 @@
 {{forms-input 
-  value=widget.search
-  action="addSelection"
+  type="text"
+  value=search
+  enter="addSelection"
+  update="updateSearch"
   focus="focus"
   unfocus="unfocus"}}
 
 {{widget.search}}
 
 {{#if widget.focused}}
-<ul class="selections">
-  {{#each widget.selections}}
-    {{id}}
+<ul class="matches">
+  {{#each widget.matches}}
+  <li>{{value}}</li>
   {{else}}
-    <li>no selections</li>
+  <li>no matches</li>
   {{/each}}
 </ul>
 {{/if}}
+
+<ul class="selections">
+  {{#each widget.selections}}
+  <li {{action "removeSelection" this}}>{{value}}</li>
+  {{/each}}
+</ul>
+
+<button {{action "serialize" widget}}>Serialize</button>
