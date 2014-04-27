@@ -3,6 +3,7 @@ var _ = require('lodash');
 var contains = _.contains;
 var pluck = _.pluck;
 var last = _.last;
+var clone = _.clone;
 var multiSelect = require('./multi-select');
 var Candidate = multiSelect.Candidate;
 var Widget = multiSelect.Widget;
@@ -30,9 +31,12 @@ var candidates = [
   candidate4
 ];
 
+var selection3 = clone(candidate3);
+var selection4 = clone(candidate4);
+
 var selections = [
-  candidate3,
-  candidate4
+  selection3,
+  selection4
 ];
 
 var ms = Widget({
@@ -147,33 +151,6 @@ test("addSelection adds provided id to selections if id in candidates", function
   t.ok(ms !== widget, "addSelection returns new object");
 });
 
-//TODO: ADD A TEST FOR providing no candidate to addSelection
-
-test("addSelection does nothing if id of candidate isnt in candidates", function (t) {
-  t.plan(2);
-  var fakeCandidate = {
-    id: 99,
-    value: "whatever"
-  };
-  var widget= addSelection(ms, fakeCandidate);
-  var selectionIds = pluck(widget.selections, "id");
-  var wasAdded = contains(selectionIds, 99);
-
-  t.false(wasAdded, "selection was not added");
-  t.ok(ms !== widget, "addSelection returns new object");
-});
-
-
-test("removeSelection removes selection by id if found", function (t) {
-  t.plan(2);
-  var widget = removeSelection(ms, candidate3);
-  var selectionIds = pluck(widget.selections, "id");
-  var wasRemoved = !contains(selectionIds, candidate3.id);
-
-  t.true(wasRemoved, "removed selection");
-  t.ok(ms !== widget, "removeSelection returns new object");
-});
-
 test("removeLastSelection removes last selection", function (t) {
   t.plan(2);
   var widget = removeLastSelection(ms);
@@ -274,12 +251,4 @@ test("clearSelections clears selections array", function (t) {
 
   t.ok(cleared.selections.length === 0, "search was cleared");
   t.ok(ms !== cleared, "clearSelections returns new object");
-});
-
-test("serialize returns expanded candidates for selections", function (t) {
-  t.plan(2);
-  var candidates = serialize(ms);
-
-  t.notEqual(candidate3, candidates[0], "serialize returns new data");
-  t.notEqual(candidate4, candidates[1], "serialize returns new data");
 });

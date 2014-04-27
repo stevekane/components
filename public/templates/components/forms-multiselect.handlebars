@@ -1,4 +1,4 @@
-{{forms-input 
+{{input 
   type="text"
   value=search
   enter="addSelection"
@@ -23,5 +23,3 @@
   <li {{action "removeSelection" this}}>{{value}}</li>
   {{/each}}
 </ul>
-
-<button {{action "serialize" widget}}>Serialize</button>

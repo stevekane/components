@@ -55,14 +55,14 @@ function program6(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push(escapeExpression((helper = helpers['forms-input'] || (depth0 && depth0['forms-input']),options={hash:{
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'type': ("text"),
     'value': ("search"),
     'enter': ("addSelection"),
     'update': ("updateSearch"),
     'focus': ("focus"),
     'unfocus': ("unfocus")
-  },hashTypes:{'type': "STRING",'value': "ID",'enter': "STRING",'update': "STRING",'focus': "STRING",'unfocus': "STRING"},hashContexts:{'type': depth0,'value': depth0,'enter': depth0,'update': depth0,'focus': depth0,'unfocus': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "forms-input", options))));
+  },hashTypes:{'type': "STRING",'value': "ID",'enter': "STRING",'update': "STRING",'focus': "STRING",'unfocus': "STRING"},hashContexts:{'type': depth0,'value': depth0,'enter': depth0,'update': depth0,'focus': depth0,'unfocus': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n\n");
   stack1 = helpers._triageMustache.call(depth0, "widget.search", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -72,9 +72,7 @@ function program6(depth0,data) {
   data.buffer.push("\n\n<ul class=\"selections\">\n  ");
   stack1 = helpers.each.call(depth0, "widget.selections", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</ul>\n\n<button ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "serialize", "widget", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
-  data.buffer.push(">Serialize</button>\n");
+  data.buffer.push("\n</ul>\n");
   return buffer;
   
 });

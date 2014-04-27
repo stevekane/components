@@ -1,17 +1,15 @@
 var _ = require("lodash");
 var cloneDeep = _.cloneDeep;
-var clone = _.clone;
 var extend = _.extend;
-var pluck = _.pluck;
-var contains = _.contains;
+var reject = _.reject;
 var initial = _.initial;
 var reduce = _.reduce;
-var filter = _.filter;
 
 //internal function used to correctly copy the Widget with new params
 //Widget, Object -> Widget
 var set = function (widget, updates) {
   var propertyBlend = extend(cloneDeep(widget), cloneDeep(updates));
+
   return Widget(propertyBlend);
 };
 
@@ -19,7 +17,7 @@ var set = function (widget, updates) {
 var calculateMatches = function (string, candidates) {
   return reduce(candidates, function (matches, candidate) {
     return candidate.value.indexOf(string) > -1 
-      ? matches.concat(clone(candidate))
+      ? matches.concat(cloneDeep(candidate))
       : matches;
   }, []);
 };
@@ -66,17 +64,17 @@ var Widget = function Widget (props) {
 var addSelection = function (widget, candidate) {
   var candidate = candidate || widget.matches[widget.selectionIndex];
   var selections = candidate
-    ? widget.selections.concat(candidate)
+    ? widget.selections.concat(cloneDeep(candidate))
     : widget.selections;
 
   return set(widget, {selections: selections});
 };
 
-//Widget, id -> Widget
-var removeSelection = function (widget, candidate) {
-  var selections = filter(widget.selections, function (selection) {
-    return candidate.id !== selection.id; 
-  });
+//Widget, index -> Widget
+var removeSelection = function (widget, index) {
+  var selections = reject(widget.selections, function (selection, i) {
+    return index === i; 
+  });;
 
   return set(widget, {selections: selections});
 };
@@ -118,14 +116,6 @@ var clearSelections = function (widget) {
   return set(widget, {selections: []});
 };
 
-//Widget -> [Candidates]
-var serialize = function (widget) {
-  var candidates = filter(widget.candidates, function (candidate) {
-    return contains(widget.selections, candidate.id);
-  });
-  return cloneDeep(candidates);
-};
-
 module.exports.Candidate = Candidate;
 module.exports.Widget = Widget;
 module.exports.addSelection = addSelection;
@@ -137,5 +127,4 @@ module.exports.updateSearch = updateSearch;
 module.exports.focus = focus;
 module.exports.clearSearch = clearSearch;
 module.exports.clearSelections = clearSelections;
-module.exports.serialize = serialize;
 module.exports.set = set;
