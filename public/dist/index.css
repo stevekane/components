@@ -1357,6 +1357,8 @@ li {
 }
 .ms-wrapper .ms-dropdown {
   width: 100%;
+  max-height: 256px;
+  overflow-y: scroll;
 }
 .ms-wrapper .ms-dropdown .ms-match {
   width: 100%;
@@ -1373,40 +1375,36 @@ li {
   color: gray;
   background: #cdcdcd;
 }
-.ms-wrapper .ms-dropdown .ms-match:first-child {
+.ms-wrapper .ms-dropdown .ms-match:hover {
   color: white;
   background: gray;
 }
-.ms-wrapper .ms-dropdown .ms-match:hover {
+.ms-wrapper .ms-dropdown .ms-match.active {
   color: white;
   background: gray;
 }
 .ms-wrapper .ms-tags {
   min-height: 32px;
   background-color: #cdcdcd;
+  padding: 3px;
 }
 .ms-wrapper .ms-tags .ms-tag {
-  position: relative;
-  display: inline-block;
-  height: 26px;
-  max-width: 94%;
-  line-height: 24px;
-  padding-left: 4px;
-  padding-right: 4px;
-  margin: 3px;
-  color: white;
-  background: gray;
-}
-.ms-wrapper .ms-tags .ms-tag .ms-value {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  position: relative;
   display: inline-block;
-  width: 90%;
+  height: 26px;
+  width: 100%;
+  line-height: 24px;
+  padding-left: 4px;
+  padding-right: 24px;
+  color: white;
+  background: gray;
 }
 .ms-wrapper .ms-tags .ms-tag i {
   position: absolute;
-  top: 4px;
+  top: 6px;
   right: 8px;
 }
 .ms-wrapper .ms-tags .ms-no-tag {

@@ -6981,6 +6981,7 @@ App.FormsMultiselectComponent = Ember.Component.extend({
       candidates: candidates,
       focused: this.get("focused") || false
     }));
+
     this._super(arguments);
   },
 
@@ -6988,16 +6989,43 @@ App.FormsMultiselectComponent = Ember.Component.extend({
     set(this, "widget", ms.focus(this.widget, true)); 
   },
 
-  focusOut: function () {
-    set(this, "widget", ms.focus(this.widget, false)); 
+  //wrap this in timeout to allow dropdown to be clicked before vanishing
+  focusOut: function (e) {
+    Ember.run.later(this, function () {
+      set(this, "widget", ms.focus(this.widget, false)); 
+    }, 200);
   },
 
+  //wrap selections with "active" for templating
+  matches: function () {
+    var matches = this.get('widget.matches'); 
+    var selectionIndex = this.get('widget.selectionIndex');
+
+    return matches.map(function (match, index) {
+      return {
+        match: match,
+        active: selectionIndex === index
+      }; 
+    });
+  }.property("widget.matches.[]", "widget.selectionIndex"),
+
+  //observes our widget's selections and sets them to a bound prop
+  updateValues: function () {
+    set(this, "values", this.get('widget.selections'));
+  }.observes("widget.selections.[]"),
+
+  //when search changes, update widget
   updateSearch: function () {
-    this.set("widget", ms.updateSearch(this.widget, this.search)); 
+    set(this, "widget", ms.updateSearch(this.widget, this.search)); 
   }.observes("search"),
 
   actions: {
     addSelection: function (value) {
+      set(this, "widget", ms.addSelection(this.widget, value));
+      set(this, "search", "");
+    },
+
+    addActiveSelection: function () {
       set(this, "widget", ms.addSelection(this.widget));
       set(this, "search", "");
     },
@@ -7007,6 +7035,10 @@ App.FormsMultiselectComponent = Ember.Component.extend({
 
       set(this, "widget", ms.removeSelection(this.widget, index));
     },
+
+    removeLastSelection: function () {
+      set(this, "widget", ms.removeLastSelection(this.widget));
+    }
   }
 });
 

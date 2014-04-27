@@ -6,7 +6,8 @@ html(lang=en)
   body
     .container
       .row
-        h1 Welcome to component examples
+        .col-sm-12
+          h1 Welcome to component examples
 
       .row
         .col-sm-3
@@ -15,18 +16,32 @@ html(lang=en)
             .ms-wrapper
               ul.ms-tags
                 li.ms-tag
-                  .ms-value Bobby 
+                  | Bobby 
                   i.glyphicon.glyphicon-remove
                 li.ms-tag
-                  .ms-value Gesunachtbit mein lolbats excersisio
+                  | Walterism
+                  i.glyphicon.glyphicon-remove
+                li.ms-tag
+                  | Gesunachtbit mein lolbats excersisio
                   i.glyphicon.glyphicon-remove
 
               input.ms-input(placeholder="Choose a friend")
 
               ul.ms-dropdown
-                li.ms-match Bobby
+                li.ms-match.active Bobby
                 li.ms-match Susie 
                 li.ms-match Jimmy 
+                li.ms-match Tommy 
+                li.ms-match Phyllis 
+                li.ms-match Germina 
+                li.ms-match Rohanda
+                li.ms-match Blastoise 
+                li.ms-match Melpomane
+                li.ms-match Gretchen 
+                li.ms-match Tolstoy 
+                li.ms-match Michealangelo 
+                li.ms-match Friedrik 
+                li.ms-match Bonzai 
 
         .col-sm-3
           #react

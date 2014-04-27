@@ -1,7 +1,7 @@
 <ul class="ms-tags">
   {{#each widget.selections}}
   <li class="ms-tag">
-    <div class="ms-value">{{value}}</div>
+    {{value}}
     <i class="glyphicon glyphicon-remove" {{action "removeSelection" this}}></i>
   </li>
   {{else}}
@@ -14,17 +14,18 @@
   type="text"
   value=search
   placeholder=placeholder
-  enter="addSelection"
-  update="updateSearch"
-  focus="focus"
-  unfocus="unfocus"}}
+  enter="addActiveSelection"
+  escape-press="removeLastSelection"
+  update="updateSearch"}}
 
-<ul class="ms-dropdown">
-{{#if widget.focused}}
-  {{#each widget.matches}}
-  <li class="ms-match">{{value}}</li>
-  {{else}}
-  <li class="ms-no-matches">no matches</li>
-  {{/each}}
-{{/if}}
-</ul>
+  <ul class="ms-dropdown">
+  {{#if widget.focused}}
+    {{#each matches}}
+    <li {{bind-attr class=":ms-match active"}} {{action "addSelection" match}}>
+      {{match.value}}
+    </li>
+    {{else}}
+    <li class="ms-no-matches">no matches</li>
+    {{/each}}
+  {{/if}}
+  </ul>

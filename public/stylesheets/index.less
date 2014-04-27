@@ -35,6 +35,8 @@ li {
   }
   .ms-dropdown {
     width: 100%;
+    max-height: 256px;
+    overflow-y: scroll;
     .ms-match {
       .size(100%, 32px);
       .text-overflow();
@@ -46,38 +48,34 @@ li {
       padding-left: 12px;
       color: gray;
       background: @light-gray;
-      &:first-child {
-        color: white;
-        background: gray;
-      }
       &:hover {
         color: white;
         background: gray;
       }
     }
+    .ms-match.active {
+      color: white;
+      background: gray; 
+    }
   }
   .ms-tags {
     min-height: 32px;
     background-color: @light-gray;  
+    padding: 3px;
     .ms-tag {
+      .text-overflow();
       position: relative;
       display: inline-block;
       height: 26px;
-      max-width: 94%;
+      width: 100%;
       line-height: 24px;
       padding-left: 4px;
-      padding-right: 4px;
-      margin: 3px;
+      padding-right: 24px;
       color: white;
       background: gray;
-      .ms-value {
-        .text-overflow();
-        display: inline-block;
-        width: 90%;
-      }
       i {
         position: absolute;
-        top: 4px;
+        top: 6px;
         right: 8px;
       }
     }
