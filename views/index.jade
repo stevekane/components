@@ -9,35 +9,34 @@ html(lang=en)
         h1 Welcome to component examples
 
       .row
-        .left-column
+        .col-sm-3
           #static
             h2 static
             .ms-wrapper
               ul.ms-tags
                 li.ms-tag
-                  | Bobby 
-                  span.glyphicon.glyphicon-remove
+                  .ms-value Bobby 
+                  i.glyphicon.glyphicon-remove
                 li.ms-tag
-                  | Bobby 
-                  span.glyphicon.glyphicon-remove
-                li.ms-tag
-                  | Bobby 
-                  span.glyphicon.glyphicon-remove
-                li.ms-tag
-                  | Bobby 
-                  span.glyphicon.glyphicon-remove
+                  .ms-value Gesunachtbit mein lolbats excersisio
+                  i.glyphicon.glyphicon-remove
+
               input.ms-input(placeholder="Choose a friend")
+
               ul.ms-dropdown
                 li.ms-match Bobby
                 li.ms-match Susie 
                 li.ms-match Jimmy 
 
+        .col-sm-3
           #react
             h2 react.js
 
-        .right-column
+        .col-sm-3
           #ember
             h2 ember.js
+
+        .col-sm-3
           #backbone
             h2 backbone.js
 

@@ -23,12 +23,12 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1;
-  data.buffer.push("\n  <li class=\"ms-tag\">\n    ");
+  data.buffer.push("\n  <li class=\"ms-tag\">\n    <div class=\"ms-value\">");
   stack1 = helpers._triageMustache.call(depth0, "value", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    <span class=\"glyphicon glyphicon-remove\" ");
+  data.buffer.push("</div>\n    <i class=\"glyphicon glyphicon-remove\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "removeSelection", "", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
-  data.buffer.push(">\n    </span>\n  </li>\n  ");
+  data.buffer.push("></i>\n  </li>\n  ");
   return buffer;
   }
 

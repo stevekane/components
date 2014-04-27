@@ -1,9 +1,8 @@
 <ul class="ms-tags">
   {{#each widget.selections}}
   <li class="ms-tag">
-    {{value}}
-    <span class="glyphicon glyphicon-remove" {{action "removeSelection" this}}>
-    </span>
+    <div class="ms-value">{{value}}</div>
+    <i class="glyphicon glyphicon-remove" {{action "removeSelection" this}}></i>
   </li>
   {{else}}
   <li class="ms-no-tag">no selections</li>

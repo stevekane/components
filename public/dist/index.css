@@ -1348,34 +1348,10 @@ ul {
 li {
   margin: 0px;
 }
-.left-column {
-  position: relative;
-  min-height: 1px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-@media (min-width: 768px) {
-  .left-column {
-    float: left;
-    width: 25%;
-  }
-}
-.right-column {
-  position: relative;
-  min-height: 1px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-@media (min-width: 768px) {
-  .right-column {
-    float: left;
-    width: 25%;
-  }
-}
 .ms-wrapper {
   width: 90%;
 }
-.ms-wrapper input {
+.ms-wrapper input.ms-input {
   width: 100%;
   height: 32px;
 }
@@ -1385,6 +1361,12 @@ li {
 .ms-wrapper .ms-dropdown .ms-match {
   width: 100%;
   height: 32px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-bottom: 1px solid #555555;
+  border-left: 1px solid #555555;
+  border-right: 1px solid #555555;
   padding-top: .2em;
   font-size: 1.2em;
   padding-left: 12px;
@@ -1402,17 +1384,30 @@ li {
 .ms-wrapper .ms-tags {
   min-height: 32px;
   background-color: #cdcdcd;
-  padding: 4px;
 }
 .ms-wrapper .ms-tags .ms-tag {
+  position: relative;
   display: inline-block;
-  height: 24px;
+  height: 26px;
+  max-width: 94%;
   line-height: 24px;
   padding-left: 4px;
   padding-right: 4px;
-  text-align: bottom;
+  margin: 3px;
   color: white;
-  background-color: gray;
+  background: gray;
+}
+.ms-wrapper .ms-tags .ms-tag .ms-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  width: 90%;
+}
+.ms-wrapper .ms-tags .ms-tag i {
+  position: absolute;
+  top: 4px;
+  right: 8px;
 }
 .ms-wrapper .ms-tags .ms-no-tag {
   height: 24px;
