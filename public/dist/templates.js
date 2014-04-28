@@ -1,17 +1,8 @@
 Ember.TEMPLATES["application"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
+  var buffer = '', helper, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
-function program1(depth0,data) {
-  
-  var buffer = '', stack1;
-  data.buffer.push("\n    <li>");
-  stack1 = helpers._triageMustache.call(depth0, "value", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</li> \n  ");
-  return buffer;
-  }
 
   data.buffer.push(escapeExpression((helper = helpers['forms-multiselect'] || (depth0 && depth0['forms-multiselect']),options={hash:{
     'classNames': ("ms-wrapper"),
@@ -20,10 +11,7 @@ function program1(depth0,data) {
     'values': ("games"),
     'name': ("games")
   },hashTypes:{'classNames': "STRING",'candidates': "ID",'placeholder': "STRING",'values': "ID",'name': "STRING"},hashContexts:{'classNames': depth0,'candidates': depth0,'placeholder': depth0,'values': depth0,'name': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "forms-multiselect", options))));
-  data.buffer.push("\n\n<ul>\n  ");
-  stack1 = helpers.each.call(depth0, "games", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</ul>\n");
+  data.buffer.push("\n");
   return buffer;
   
 });
