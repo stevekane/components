@@ -29,13 +29,16 @@ module.exports = function (grunt) {
       dist: {
         files: {
           "public/dist/components.js": ["public/source/main.js"]
+        },
+        options: {
+          transform: ["reactify"]
         }
       } 
     },
 
     watch: {
       scripts: {
-        files: ["public/source/**/*.js", "modules/**/*.js"], 
+        files: ["public/source/**/*.js*", "modules/**/*.js*"], 
         tasks: ["browserify"],
         options: {
           livereload: true 

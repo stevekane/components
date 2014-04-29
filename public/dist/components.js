@@ -6969,9 +6969,9 @@ var candidates = require("../../candidates.json").candidates;
 var get = Ember.get;
 var set = Ember.set;
 
-var App = Ember.Application.create();
-
-App.deferReadiness();
+var App = Ember.Application.create({
+  rootElement: "#ember"
+});
 
 App.FormsMultiselectComponent = Ember.Component.extend({
   search: "",
@@ -7044,18 +7044,92 @@ App.FormsMultiselectComponent = Ember.Component.extend({
   }
 });
 
-module.exports = App;
-
 },{"../../candidates.json":1,"../../modules/multi-select/multi-select":2}],6:[function(require,module,exports){
 var emberApp = require("./ember");
-var ReactApp = require("./react");
+var ReactApp = require("./react.jsx");
 var backboneApp = require("./backbone");
+var ms = require("../../modules/multi-select/multi-select");
+var candidates = require("../../candidates.json").candidates;
 
-emberApp.reopen({
-  rootElement: "#ember"
+var reactRoot = document.getElementById("reactRoot");
+
+var widget = ms.Widget({
+  name: "react-ms",
+  candidates: candidates,
+  selections: [{id: 1, value: "Street Fighter IV"}],
+  search: "Sup"
 });
-emberApp.advanceReadiness();
 
-},{"./backbone":4,"./ember":5,"./react":7}],7:[function(require,module,exports){
-module.exports=require(4)
-},{}]},{},[6])
+//closure over our widget instance
+var set = function (newWidget) {
+  widget = newWidget;
+};
+
+var tick = function () {
+  React.renderComponent(ReactApp({
+    widget: widget,
+    set: set
+  }), reactRoot);
+  window.requestAnimationFrame(tick);
+};
+
+window.requestAnimationFrame(tick);
+
+},{"../../candidates.json":1,"../../modules/multi-select/multi-select":2,"./backbone":4,"./ember":5,"./react.jsx":7}],7:[function(require,module,exports){
+/** @jsx React.DOM */var _ = require("lodash");
+var map = _.map;
+var isEqual = _.isEqual;
+var partial = _.partial;
+var bind = _.bind;
+var compose = _.compose;
+var ms = require("../../modules/multi-select/multi-select");
+
+var TagList = React.createClass({displayName: 'TagList',
+  render: function () {
+    var removeSelection = this.props.removeSelection;
+    var tags = this.props.tags;
+
+    var renderTag = function (tag, index) {
+      var removeSelf = partial(removeSelection, index);
+
+      return (
+        React.DOM.li( {className:"ms-tag"}, 
+          "wanker",
+           tag.value, 
+          React.DOM.i( {className:"glyphicon glyphicon-remove", onClick:removeSelf} 
+          )
+        ) 
+      );
+    };
+
+    return React.DOM.ul( {className:"ms-tags"},  map(tags, renderTag) )
+  }
+});
+
+var MultiSelect = React.createClass({displayName: 'MultiSelect',
+  shouldComponentUpdate: function (nextProps) {
+    return !isEqual(nextProps, this.props);
+  },
+  render: function () {
+    var widget = this.props.widget;
+    var set = this.props.set
+    var focusIn = compose(set, partial(ms.focus, widget, true));
+    var focusOut = compose(set, partial(ms.focus, widget, false));
+    var addSelection = compose(set, partial(ms.addSelection, widget));
+    var addActiveSelection = compose(set, partial(ms.addSelection, widget));
+    var removeSelection = compose(set, partial(ms.removeSelection, widget));
+    var removeLastSelection = compose(set, partial(ms.removeLastSelection, widget));
+    var updateSearch = compose(set, partial(ms.updateSearch, widget));
+    var updateSearch = compose(set, partial(ms.updateSearch, widget));
+
+    return (
+      React.DOM.div( {className:"ms-wrapper"}, 
+        TagList( {tags:widget.selections, removeSelection:removeSelection} )
+      )
+    ); 
+  }
+});
+
+module.exports = MultiSelect;
+
+},{"../../modules/multi-select/multi-select":2,"lodash":3}]},{},[6])
