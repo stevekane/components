@@ -7156,7 +7156,10 @@ var MultiSelect = React.createClass({displayName: 'MultiSelect',
     return (
       React.DOM.div( {className:"ms-wrapper"}, 
         TagList( {tags:widget.selections, removeSelection:removeSelection} ),
-        React.DOM.input( {className:"ms-input", onFocus:focusIn, onBlur:focusOut} ),
+        React.DOM.input( {className:"ms-input", 
+          placeholder:"Choose a game",
+          onFocus:focusIn, 
+          onBlur:focusOut} ),
          widget.focused ? renderDropdown() : null 
       )
     ); 
