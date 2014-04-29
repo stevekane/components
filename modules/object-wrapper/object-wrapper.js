@@ -51,7 +51,7 @@ var Wrapper = function Wrapper (ref, relativePath) {
 var get = function (wrapper, path) {
   var newPath = getFullPath(wrapper._relativePath, path);
 
-  return Wrapper(wrapper._inner, newPath); 
+  return new Wrapper(wrapper._inner, newPath); 
 };
 
 //returns deepClone of object found at this path
