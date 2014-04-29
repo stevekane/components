@@ -8,6 +8,7 @@ var multiSelect = require('./multi-select');
 var Candidate = multiSelect.Candidate;
 var Widget = multiSelect.Widget;
 var addSelection = multiSelect.addSelection;
+var addActiveSelection = multiSelect.addActiveSelection;
 var removeSelection = multiSelect.removeSelection;
 var removeLastSelection = multiSelect.removeLastSelection;
 var incrementSelectionIndex = multiSelect.incrementSelectionIndex;
@@ -42,7 +43,7 @@ var selections = [
 var ms = Widget({
   name: "friends",
   focused: true,
-  search: "puppies",
+  search: "",
   candidates: candidates,
   selections: selections
 });
@@ -141,7 +142,7 @@ function (t) {
   t.same(widget.selectionIndex, 1, "returns selection index of 1");
 });
 
-test("addSelection adds provided id to selections if id in candidates", function (t) {
+test("addSelection adds provided candidate to selections", function (t) {
   t.plan(2);
   var widget = addSelection(ms, candidate2);
   var selectionIds = pluck(widget.selections, "id");
@@ -149,6 +150,29 @@ test("addSelection adds provided id to selections if id in candidates", function
 
   t.true(wasAdded, "selection was correctly added");
   t.ok(ms !== widget, "addSelection returns new object");
+});
+
+test("addActiveSelection adds candidate at selectionIndex if found", function (t) {
+  t.plan(2);
+  var widget = addActiveSelection(ms);
+  var selectionIds = pluck(widget.selections, "id");
+  var wasAdded = contains(selectionIds, candidate1.id);
+
+  t.true(wasAdded, "active selection was correctly added");
+  t.ok(ms !== widget, "addActiveSelection returns new object");
+});
+
+test("addActiveSelection resets search field", function (t) {
+  t.plan(1);
+  var original = Widget({
+    name: "friends",
+    focused: true,
+    search: "brains",
+    candidates: candidates
+  });
+  var widget = addActiveSelection(original);
+
+  t.equal(widget.search, "", "search field was reset");
 });
 
 test("removeLastSelection removes last selection", function (t) {

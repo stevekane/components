@@ -103,15 +103,27 @@ var Widget = function Widget (props) {
   return this;
 };
 
-//Widget, id -> Widget  N.B. supports both candidate and none
+//Widget, id -> Widget
 var addSelection = function (widget, candidate) {
-  var candidate = candidate || widget.matches[widget.selectionIndex];
   var selections = candidate
     ? widget.selections.concat(cloneDeep(candidate))
     : widget.selections;
 
   return set(widget, {
     selections: selections
+  });
+};
+
+//Widget -> Widget
+var addActiveSelection = function (widget) {
+  var candidate = widget.matches[widget.selectionIndex];
+  var selections = candidate
+    ? widget.selections.concat(cloneDeep(candidate))
+    : widget.selections;
+
+  return set(widget, {
+    selections: selections,
+    search: ""
   });
 };
 
@@ -164,6 +176,7 @@ var clearSelections = function (widget) {
 module.exports.Candidate = Candidate;
 module.exports.Widget = Widget;
 module.exports.addSelection = addSelection;
+module.exports.addActiveSelection = addActiveSelection;
 module.exports.removeSelection = removeSelection;
 module.exports.removeLastSelection = removeLastSelection;
 module.exports.incrementSelectionIndex = incrementSelectionIndex;
@@ -6971,20 +6984,9 @@ var candidates = require("../../candidates.json").candidates;
 var get = Ember.get;
 var set = Ember.set;
 
-var App = Ember.Application.create({
-  rootElement: "#ember"
-});
-
-App.FormsMultiselectComponent = Ember.Component.extend({
-  search: "",
-
-  setDefaultWidget: function () {
-    set(this, "widget", ms.Widget({ 
-      name: this.get("name"),
-      search: this.get("search"),
-      candidates: candidates,
-      focused: this.get("focused") || false
-    }));
+module.exports = Ember.Component.extend({
+  setDefaultSearch: function () {
+    set(this, "search", this.get("widget.search")); 
   }.on("init"),
 
   focusIn: function () {
@@ -7028,7 +7030,7 @@ App.FormsMultiselectComponent = Ember.Component.extend({
     },
 
     addActiveSelection: function () {
-      set(this, "widget", ms.addSelection(this.widget));
+      set(this, "widget", ms.addActiveSelection(this.widget));
       set(this, "search", "");
     },
 
@@ -7045,15 +7047,36 @@ App.FormsMultiselectComponent = Ember.Component.extend({
 });
 
 },{"../../candidates.json":1,"../../modules/multi-select/multi-select":2}],6:[function(require,module,exports){
-var emberApp = require("./ember");
-var ReactApp = require("./react.jsx");
+var EmberWidget = require("./ember");
+var ReactWidget = require("./react.jsx");
 var backboneApp = require("./backbone");
 var ms = require("../../modules/multi-select/multi-select");
 var candidates = require("../../candidates.json").candidates;
 
 var reactRoot = document.getElementById("reactRoot");
+var emberRoot = document.getElementById("ember");
 
-var widget = ms.Widget({
+var App = Ember.Application.create({
+  rootElement: emberRoot
+});
+
+var emberWidget = ms.Widget({
+  name: "ember-ms",
+  candidates: candidates,
+  search: ""
+});
+
+//inject our candidates into scope "the ember way"
+App.ApplicationRoute = Ember.Route.extend({
+  setupController: function (controller) {
+    controller.set("widget", emberWidget);
+  }
+});
+
+App.FormsMultiselectComponent = EmberWidget;
+
+//global app state that undergoes mutations via transactions
+var reactWidget = ms.Widget({
   name: "react-ms",
   candidates: candidates,
   search: ""
@@ -7062,20 +7085,20 @@ var widget = ms.Widget({
 //closure over our widget instance to perform transactions
 var transact = function (fn) {
   var args = Array.prototype.slice.call(arguments, 1);
-  args.unshift(widget);
+  args.unshift(reactWidget);
 
-  widget = fn.apply(this, args);
+  reactWidget = fn.apply(this, args);
 };
 
 var tick = function () {
-  React.renderComponent(ReactApp({
-    widget: widget,
+  React.renderComponent(ReactWidget({
+    widget: reactWidget,
     transact: transact
   }), reactRoot);
   window.requestAnimationFrame(tick);
 };
 
-window.requestAnimationFrame(tick);
+tick();
 
 },{"../../candidates.json":1,"../../modules/multi-select/multi-select":2,"./backbone":4,"./ember":5,"./react.jsx":7}],7:[function(require,module,exports){
 /** @jsx React.DOM */var _ = require("lodash");
@@ -7125,7 +7148,15 @@ var DropDown = React.createClass({displayName: 'DropDown',
       return React.DOM.li( {className:"ms-match", onClick:addSelf},  option.value );
     };
 
-    return React.DOM.ul( {className:"ms-dropdown"},  map(options, renderOption) );
+    var renderNoOptions = function () {
+      return React.DOM.li( {className:"ms-no-matches"}, "no matches");
+    };
+
+    return (
+      React.DOM.ul( {className:"ms-dropdown"}, 
+         options.length ? map(options, renderOption) : renderNoOptions() 
+      )
+    );
   }
 });
 
@@ -7134,19 +7165,32 @@ var MultiSelect = React.createClass({displayName: 'MultiSelect',
     return !isEqual(nextProps, this.props);
   },
   render: function () {
+    var self = this;
     var widget = this.props.widget;
     var transact = this.props.transact;
     var addSelection = partial(transact, ms.addSelection);
-    var addActiveSelection = partial(transact, ms.addSelection);
+    var addActiveSelection = partial(transact, ms.addActiveSelection);
     var removeSelection = partial(transact, ms.removeSelection);
     var removeLastSelection = partial(transact, ms.removeLastSelection);
     var updateSearch = partial(transact, ms.updateSearch);
     var focusIn = partial(transact, ms.focus, true);
+    
     //wrap in timer to prevent focus event from firing before click
     var focusOut = function () {
       setTimeout(function () {
         transact(ms.focus, false);
       }, 100);
+    };
+
+    //used with the form input element
+    var handleChange = function (event) {
+      updateSearch(event.target.value);
+    };
+
+    //used to detect espace and enter keys
+    var handleKeyUp = function (event) {
+      if (event.keyCode === 13) addActiveSelection();
+      else if (event.keyCode === 27) removeLastSelection();
     };
 
     var renderDropdown = function () {
@@ -7157,6 +7201,10 @@ var MultiSelect = React.createClass({displayName: 'MultiSelect',
       React.DOM.div( {className:"ms-wrapper"}, 
         TagList( {tags:widget.selections, removeSelection:removeSelection} ),
         React.DOM.input( {className:"ms-input", 
+          type:"text",
+          onChange:handleChange,
+          onKeyUp:handleKeyUp,
+          value:widget.search, 
           placeholder:"Choose a game",
           onFocus:focusIn, 
           onBlur:focusOut} ),

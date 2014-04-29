@@ -3,20 +3,9 @@ var candidates = require("../../candidates.json").candidates;
 var get = Ember.get;
 var set = Ember.set;
 
-var App = Ember.Application.create({
-  rootElement: "#ember"
-});
-
-App.FormsMultiselectComponent = Ember.Component.extend({
-  search: "",
-
-  setDefaultWidget: function () {
-    set(this, "widget", ms.Widget({ 
-      name: this.get("name"),
-      search: this.get("search"),
-      candidates: candidates,
-      focused: this.get("focused") || false
-    }));
+module.exports = Ember.Component.extend({
+  setDefaultSearch: function () {
+    set(this, "search", this.get("widget.search")); 
   }.on("init"),
 
   focusIn: function () {
@@ -60,7 +49,7 @@ App.FormsMultiselectComponent = Ember.Component.extend({
     },
 
     addActiveSelection: function () {
-      set(this, "widget", ms.addSelection(this.widget));
+      set(this, "widget", ms.addActiveSelection(this.widget));
       set(this, "search", "");
     },
 

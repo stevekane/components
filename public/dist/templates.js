@@ -6,11 +6,10 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
   data.buffer.push(escapeExpression((helper = helpers['forms-multiselect'] || (depth0 && depth0['forms-multiselect']),options={hash:{
     'classNames': ("ms-wrapper"),
-    'candidates': ("candidates"),
     'placeholder': ("Choose a game"),
-    'values': ("games"),
-    'name': ("games")
-  },hashTypes:{'classNames': "STRING",'candidates': "ID",'placeholder': "STRING",'values': "ID",'name': "STRING"},hashContexts:{'classNames': depth0,'candidates': depth0,'placeholder': depth0,'values': depth0,'name': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "forms-multiselect", options))));
+    'widget': ("widget"),
+    'values': ("games")
+  },hashTypes:{'classNames': "STRING",'placeholder': "STRING",'widget': "ID",'values': "ID"},hashContexts:{'classNames': depth0,'placeholder': depth0,'widget': depth0,'values': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "forms-multiselect", options))));
   data.buffer.push("\n");
   return buffer;
   

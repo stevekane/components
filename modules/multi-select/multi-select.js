@@ -60,15 +60,27 @@ var Widget = function Widget (props) {
   return this;
 };
 
-//Widget, id -> Widget  N.B. supports both candidate and none
+//Widget, id -> Widget
 var addSelection = function (widget, candidate) {
-  var candidate = candidate || widget.matches[widget.selectionIndex];
   var selections = candidate
     ? widget.selections.concat(cloneDeep(candidate))
     : widget.selections;
 
   return set(widget, {
     selections: selections
+  });
+};
+
+//Widget -> Widget
+var addActiveSelection = function (widget) {
+  var candidate = widget.matches[widget.selectionIndex];
+  var selections = candidate
+    ? widget.selections.concat(cloneDeep(candidate))
+    : widget.selections;
+
+  return set(widget, {
+    selections: selections,
+    search: ""
   });
 };
 
@@ -121,6 +133,7 @@ var clearSelections = function (widget) {
 module.exports.Candidate = Candidate;
 module.exports.Widget = Widget;
 module.exports.addSelection = addSelection;
+module.exports.addActiveSelection = addActiveSelection;
 module.exports.removeSelection = removeSelection;
 module.exports.removeLastSelection = removeLastSelection;
 module.exports.incrementSelectionIndex = incrementSelectionIndex;
