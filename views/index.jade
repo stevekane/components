@@ -15,33 +15,16 @@ html(lang=en)
             h2 static
             .ms-wrapper
               ul.ms-tags
-                li.ms-tag
-                  | Bobby 
-                  i.glyphicon.glyphicon-remove
-                li.ms-tag
-                  | Walterism
-                  i.glyphicon.glyphicon-remove
-                li.ms-tag
-                  | Gesunachtbit mein lolbats excersisio
-                  i.glyphicon.glyphicon-remove
+                each selection in selections
+                  li.ms-tag
+                    =selection.value
+                    i.glyphicon.glyphicon-remove
 
-              input.ms-input(placeholder="Choose a friend")
+              input.ms-input(placeholder="Choose a game")
 
               ul.ms-dropdown
-                li.ms-match.active Bobby
-                li.ms-match Susie 
-                li.ms-match Jimmy 
-                li.ms-match Tommy 
-                li.ms-match Phyllis 
-                li.ms-match Germina 
-                li.ms-match Rohanda
-                li.ms-match Blastoise 
-                li.ms-match Melpomane
-                li.ms-match Gretchen 
-                li.ms-match Tolstoy 
-                li.ms-match Michealangelo 
-                li.ms-match Friedrik 
-                li.ms-match Bonzai 
+                each match in matches
+                  li.ms-match=match.value
 
         .col-sm-3
           #react
