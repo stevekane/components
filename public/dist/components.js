@@ -6962,14 +6962,16 @@ module.exports.set = set;
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
+
+},{}],5:[function(require,module,exports){
 var ms = require("../../modules/multi-select/multi-select");
 var candidates = require("../../candidates.json").candidates;
 var get = Ember.get;
 var set = Ember.set;
 
-var App = Ember.Application.create({
-  rootElement: "#ember"
-});
+var App = Ember.Application.create();
+
+App.deferReadiness();
 
 App.FormsMultiselectComponent = Ember.Component.extend({
   search: "",
@@ -7042,4 +7044,18 @@ App.FormsMultiselectComponent = Ember.Component.extend({
   }
 });
 
-},{"../../candidates.json":1,"../../modules/multi-select/multi-select":2}]},{},[4])
+module.exports = App;
+
+},{"../../candidates.json":1,"../../modules/multi-select/multi-select":2}],6:[function(require,module,exports){
+var emberApp = require("./ember");
+var ReactApp = require("./react");
+var backboneApp = require("./backbone");
+
+emberApp.reopen({
+  rootElement: "#ember"
+});
+emberApp.advanceReadiness();
+
+},{"./backbone":4,"./ember":5,"./react":7}],7:[function(require,module,exports){
+module.exports=require(4)
+},{}]},{},[6])

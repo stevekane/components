@@ -3,9 +3,9 @@ var candidates = require("../../candidates.json").candidates;
 var get = Ember.get;
 var set = Ember.set;
 
-var App = Ember.Application.create({
-  rootElement: "#ember"
-});
+var App = Ember.Application.create();
+
+App.deferReadiness();
 
 App.FormsMultiselectComponent = Ember.Component.extend({
   search: "",
@@ -77,3 +77,5 @@ App.FormsMultiselectComponent = Ember.Component.extend({
     }
   }
 });
+
+module.exports = App;

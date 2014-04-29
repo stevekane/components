@@ -28,7 +28,7 @@ module.exports = function (grunt) {
     browserify: {
       dist: {
         files: {
-          "public/dist/components.js": ["public/source/ember.js"]
+          "public/dist/components.js": ["public/source/main.js"]
         }
       } 
     },
