@@ -2,18 +2,13 @@ var _ = require("lodash");
 var reduce = _.reduce;
 var cloneDeep = _.cloneDeep;
 
-//used internally in get for property lookup
-var innerGet = function (object, key) {
-  return object[key];
-};
-
 //chop up a string path like "path.to.something" and return object
 var lookupOnPath = function (object, path) {
   if (!path) return object;
   var keys = path.split(".");
   
   return reduce(keys, function (obj, key) {
-    return obj ? innerGet(obj, key) : undefined;
+    return obj ? obj[key] : undefined;
   }, object);
 };
 
