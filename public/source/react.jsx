@@ -38,9 +38,13 @@ var TagList = React.createClass({
 
 var DropDown = React.createClass({
   render: function () {
+    var click = function () {
+      console.log("click"); 
+    };
+
     return (
       <ul className="ms-dropdown">
-        <li className="ms-match active">Bobby</li>  
+        <li className="ms-match active" onClick={click}>Bobby</li>  
         <li className="ms-match">Timmy</li>  
         <li className="ms-match">Sally</li>  
         <li className="ms-match">Jamie</li>  
@@ -57,14 +61,18 @@ var MultiSelect = React.createClass({
   render: function () {
     var widget = this.props.widget;
     var set = this.props.set
-    var focusIn = compose(set, partial(ms.focus, widget, true));
-    var focusOut = compose(set, partial(ms.focus, widget, false));
     var addSelection = compose(set, partial(ms.addSelection, widget));
     var addActiveSelection = compose(set, partial(ms.addSelection, widget));
     var removeSelection = compose(set, partial(ms.removeSelection, widget));
     var removeLastSelection = compose(set, partial(ms.removeLastSelection, widget));
     var updateSearch = compose(set, partial(ms.updateSearch, widget));
-    var updateSearch = compose(set, partial(ms.updateSearch, widget));
+    var focusIn = compose(set, partial(ms.focus, widget, true));
+    //wrap in timer to prevent focus event from firing before click
+    var focusOut = function () {
+      setTimeout(function () {
+        set(ms.focus(widget, false));
+      }, 200);
+    };
 
     var renderDropdown = function () {
       return <DropDown options={widget.matches} addSelection={addSelection} /> 
