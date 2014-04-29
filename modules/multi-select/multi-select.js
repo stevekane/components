@@ -67,7 +67,9 @@ var addSelection = function (widget, candidate) {
     ? widget.selections.concat(cloneDeep(candidate))
     : widget.selections;
 
-  return set(widget, {selections: selections});
+  return set(widget, {
+    selections: selections
+  });
 };
 
 //Widget, index -> Widget

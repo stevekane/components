@@ -27,7 +27,7 @@ App.FormsMultiselectComponent = Ember.Component.extend({
   focusOut: function (e) {
     Ember.run.later(this, function () {
       set(this, "widget", ms.focus(this.widget, false)); 
-    }, 200);
+    }, 100);
   },
 
   //wrap selections with "active" for templating

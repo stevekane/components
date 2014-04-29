@@ -9,19 +9,21 @@ var reactRoot = document.getElementById("reactRoot");
 var widget = ms.Widget({
   name: "react-ms",
   candidates: candidates,
-  selections: [{id: 1, value: "Street Fighter IV"}],
-  search: "Sup"
+  search: ""
 });
 
-//closure over our widget instance
-var set = function (newWidget) {
-  widget = newWidget;
+//closure over our widget instance to perform transactions
+var transact = function (fn) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  args.unshift(widget);
+
+  widget = fn.apply(this, args);
 };
 
 var tick = function () {
   React.renderComponent(ReactApp({
     widget: widget,
-    set: set
+    transact: transact
   }), reactRoot);
   window.requestAnimationFrame(tick);
 };

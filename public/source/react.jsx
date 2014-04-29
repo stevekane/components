@@ -23,9 +23,7 @@ var TagList = React.createClass({
     };
 
     var renderNoTags = function () {
-      return (
-        <li className="ms-no-tag">no selections</li> 
-      ); 
+      return <li className="ms-no-tag">no selections</li>;
     };
 
     return (
@@ -38,19 +36,16 @@ var TagList = React.createClass({
 
 var DropDown = React.createClass({
   render: function () {
-    var click = function () {
-      console.log("click"); 
+    var options = this.props.options;
+    var addSelection = this.props.addSelection;
+
+    var renderOption = function (option, index) {
+      var addSelf = partial(addSelection, option);
+
+      return <li className="ms-match" onClick={addSelf}>{ option.value }</li>;
     };
 
-    return (
-      <ul className="ms-dropdown">
-        <li className="ms-match active" onClick={click}>Bobby</li>  
-        <li className="ms-match">Timmy</li>  
-        <li className="ms-match">Sally</li>  
-        <li className="ms-match">Jamie</li>  
-        <li className="ms-match">Brandon</li>  
-      </ul>  
-    );   
+    return <ul className="ms-dropdown">{ map(options, renderOption) }</ul>;
   }
 });
 
@@ -60,18 +55,18 @@ var MultiSelect = React.createClass({
   },
   render: function () {
     var widget = this.props.widget;
-    var set = this.props.set
-    var addSelection = compose(set, partial(ms.addSelection, widget));
-    var addActiveSelection = compose(set, partial(ms.addSelection, widget));
-    var removeSelection = compose(set, partial(ms.removeSelection, widget));
-    var removeLastSelection = compose(set, partial(ms.removeLastSelection, widget));
-    var updateSearch = compose(set, partial(ms.updateSearch, widget));
-    var focusIn = compose(set, partial(ms.focus, widget, true));
+    var transact = this.props.transact;
+    var addSelection = partial(transact, ms.addSelection);
+    var addActiveSelection = partial(transact, ms.addSelection);
+    var removeSelection = partial(transact, ms.removeSelection);
+    var removeLastSelection = partial(transact, ms.removeLastSelection);
+    var updateSearch = partial(transact, ms.updateSearch);
+    var focusIn = partial(transact, ms.focus, true);
     //wrap in timer to prevent focus event from firing before click
     var focusOut = function () {
       setTimeout(function () {
-        set(ms.focus(widget, false));
-      }, 200);
+        transact(ms.focus, false);
+      }, 100);
     };
 
     var renderDropdown = function () {

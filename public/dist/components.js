@@ -110,7 +110,9 @@ var addSelection = function (widget, candidate) {
     ? widget.selections.concat(cloneDeep(candidate))
     : widget.selections;
 
-  return set(widget, {selections: selections});
+  return set(widget, {
+    selections: selections
+  });
 };
 
 //Widget, index -> Widget
@@ -6993,7 +6995,7 @@ App.FormsMultiselectComponent = Ember.Component.extend({
   focusOut: function (e) {
     Ember.run.later(this, function () {
       set(this, "widget", ms.focus(this.widget, false)); 
-    }, 200);
+    }, 100);
   },
 
   //wrap selections with "active" for templating
@@ -7054,19 +7056,21 @@ var reactRoot = document.getElementById("reactRoot");
 var widget = ms.Widget({
   name: "react-ms",
   candidates: candidates,
-  selections: [{id: 1, value: "Street Fighter IV"}],
-  search: "Sup"
+  search: ""
 });
 
-//closure over our widget instance
-var set = function (newWidget) {
-  widget = newWidget;
+//closure over our widget instance to perform transactions
+var transact = function (fn) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  args.unshift(widget);
+
+  widget = fn.apply(this, args);
 };
 
 var tick = function () {
   React.renderComponent(ReactApp({
     widget: widget,
-    set: set
+    transact: transact
   }), reactRoot);
   window.requestAnimationFrame(tick);
 };
@@ -7099,9 +7103,7 @@ var TagList = React.createClass({displayName: 'TagList',
     };
 
     var renderNoTags = function () {
-      return (
-        React.DOM.li( {className:"ms-no-tag"}, "no selections") 
-      ); 
+      return React.DOM.li( {className:"ms-no-tag"}, "no selections");
     };
 
     return (
@@ -7114,19 +7116,16 @@ var TagList = React.createClass({displayName: 'TagList',
 
 var DropDown = React.createClass({displayName: 'DropDown',
   render: function () {
-    var click = function () {
-      console.log("click"); 
+    var options = this.props.options;
+    var addSelection = this.props.addSelection;
+
+    var renderOption = function (option, index) {
+      var addSelf = partial(addSelection, option);
+
+      return React.DOM.li( {className:"ms-match", onClick:addSelf},  option.value );
     };
 
-    return (
-      React.DOM.ul( {className:"ms-dropdown"}, 
-        React.DOM.li( {className:"ms-match active", onClick:click}, "Bobby"),  
-        React.DOM.li( {className:"ms-match"}, "Timmy"),  
-        React.DOM.li( {className:"ms-match"}, "Sally"),  
-        React.DOM.li( {className:"ms-match"}, "Jamie"),  
-        React.DOM.li( {className:"ms-match"}, "Brandon")  
-      )  
-    );   
+    return React.DOM.ul( {className:"ms-dropdown"},  map(options, renderOption) );
   }
 });
 
@@ -7136,18 +7135,18 @@ var MultiSelect = React.createClass({displayName: 'MultiSelect',
   },
   render: function () {
     var widget = this.props.widget;
-    var set = this.props.set
-    var addSelection = compose(set, partial(ms.addSelection, widget));
-    var addActiveSelection = compose(set, partial(ms.addSelection, widget));
-    var removeSelection = compose(set, partial(ms.removeSelection, widget));
-    var removeLastSelection = compose(set, partial(ms.removeLastSelection, widget));
-    var updateSearch = compose(set, partial(ms.updateSearch, widget));
-    var focusIn = compose(set, partial(ms.focus, widget, true));
+    var transact = this.props.transact;
+    var addSelection = partial(transact, ms.addSelection);
+    var addActiveSelection = partial(transact, ms.addSelection);
+    var removeSelection = partial(transact, ms.removeSelection);
+    var removeLastSelection = partial(transact, ms.removeLastSelection);
+    var updateSearch = partial(transact, ms.updateSearch);
+    var focusIn = partial(transact, ms.focus, true);
     //wrap in timer to prevent focus event from firing before click
     var focusOut = function () {
       setTimeout(function () {
-        set(ms.focus(widget, false));
-      }, 200);
+        transact(ms.focus, false);
+      }, 100);
     };
 
     var renderDropdown = function () {
