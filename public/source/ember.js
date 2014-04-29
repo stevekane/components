@@ -10,16 +10,14 @@ var App = Ember.Application.create({
 App.FormsMultiselectComponent = Ember.Component.extend({
   search: "",
 
-  init: function () {
+  setDefaultWidget: function () {
     set(this, "widget", ms.Widget({ 
       name: this.get("name"),
       search: this.get("search"),
       candidates: candidates,
       focused: this.get("focused") || false
     }));
-
-    this._super(arguments);
-  },
+  }.on("init"),
 
   focusIn: function () {
     set(this, "widget", ms.focus(this.widget, true)); 

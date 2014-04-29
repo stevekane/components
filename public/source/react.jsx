@@ -2,7 +2,6 @@ var _ = require("lodash");
 var map = _.map;
 var isEqual = _.isEqual;
 var partial = _.partial;
-var bind = _.bind;
 var compose = _.compose;
 var ms = require("../../modules/multi-select/multi-select");
 
@@ -16,7 +15,6 @@ var TagList = React.createClass({
 
       return (
         <li className="ms-tag">
-          wanker
           { tag.value }
           <i className="glyphicon glyphicon-remove" onClick={removeSelf} >
           </i>
@@ -24,7 +22,31 @@ var TagList = React.createClass({
       );
     };
 
-    return <ul className="ms-tags">{ map(tags, renderTag) }</ul>
+    var renderNoTags = function () {
+      return (
+        <li className="ms-no-tag">no selections</li> 
+      ); 
+    };
+
+    return (
+      <ul className="ms-tags">
+        { tags.length ? map(tags, renderTag) : renderNoTags() }
+      </ul>
+    );
+  }
+});
+
+var DropDown = React.createClass({
+  render: function () {
+    return (
+      <ul className="ms-dropdown">
+        <li className="ms-match active">Bobby</li>  
+        <li className="ms-match">Timmy</li>  
+        <li className="ms-match">Sally</li>  
+        <li className="ms-match">Jamie</li>  
+        <li className="ms-match">Brandon</li>  
+      </ul>  
+    );   
   }
 });
 
@@ -44,9 +66,15 @@ var MultiSelect = React.createClass({
     var updateSearch = compose(set, partial(ms.updateSearch, widget));
     var updateSearch = compose(set, partial(ms.updateSearch, widget));
 
+    var renderDropdown = function () {
+      return <DropDown options={widget.matches} addSelection={addSelection} /> 
+    };
+
     return (
       <div className="ms-wrapper">
         <TagList tags={widget.selections} removeSelection={removeSelection} />
+        <input className="ms-input" onFocus={focusIn} onBlur={focusOut} />
+        { widget.focused ? renderDropdown() : null }
       </div>
     ); 
   }

@@ -6976,16 +6976,14 @@ var App = Ember.Application.create({
 App.FormsMultiselectComponent = Ember.Component.extend({
   search: "",
 
-  init: function () {
+  setDefaultWidget: function () {
     set(this, "widget", ms.Widget({ 
       name: this.get("name"),
       search: this.get("search"),
       candidates: candidates,
       focused: this.get("focused") || false
     }));
-
-    this._super(arguments);
-  },
+  }.on("init"),
 
   focusIn: function () {
     set(this, "widget", ms.focus(this.widget, true)); 
@@ -7080,7 +7078,6 @@ window.requestAnimationFrame(tick);
 var map = _.map;
 var isEqual = _.isEqual;
 var partial = _.partial;
-var bind = _.bind;
 var compose = _.compose;
 var ms = require("../../modules/multi-select/multi-select");
 
@@ -7094,7 +7091,6 @@ var TagList = React.createClass({displayName: 'TagList',
 
       return (
         React.DOM.li( {className:"ms-tag"}, 
-          "wanker",
            tag.value, 
           React.DOM.i( {className:"glyphicon glyphicon-remove", onClick:removeSelf} 
           )
@@ -7102,7 +7098,31 @@ var TagList = React.createClass({displayName: 'TagList',
       );
     };
 
-    return React.DOM.ul( {className:"ms-tags"},  map(tags, renderTag) )
+    var renderNoTags = function () {
+      return (
+        React.DOM.li( {className:"ms-no-tag"}, "no selections") 
+      ); 
+    };
+
+    return (
+      React.DOM.ul( {className:"ms-tags"}, 
+         tags.length ? map(tags, renderTag) : renderNoTags() 
+      )
+    );
+  }
+});
+
+var DropDown = React.createClass({displayName: 'DropDown',
+  render: function () {
+    return (
+      React.DOM.ul( {className:"ms-dropdown"}, 
+        React.DOM.li( {className:"ms-match active"}, "Bobby"),  
+        React.DOM.li( {className:"ms-match"}, "Timmy"),  
+        React.DOM.li( {className:"ms-match"}, "Sally"),  
+        React.DOM.li( {className:"ms-match"}, "Jamie"),  
+        React.DOM.li( {className:"ms-match"}, "Brandon")  
+      )  
+    );   
   }
 });
 
@@ -7122,9 +7142,15 @@ var MultiSelect = React.createClass({displayName: 'MultiSelect',
     var updateSearch = compose(set, partial(ms.updateSearch, widget));
     var updateSearch = compose(set, partial(ms.updateSearch, widget));
 
+    var renderDropdown = function () {
+      return DropDown( {options:widget.matches, addSelection:addSelection} ) 
+    };
+
     return (
       React.DOM.div( {className:"ms-wrapper"}, 
-        TagList( {tags:widget.selections, removeSelection:removeSelection} )
+        TagList( {tags:widget.selections, removeSelection:removeSelection} ),
+        React.DOM.input( {className:"ms-input", onFocus:focusIn, onBlur:focusOut} ),
+         widget.focused ? renderDropdown() : null 
       )
     ); 
   }
