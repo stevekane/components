@@ -14,7 +14,6 @@ test("Wrap returns an object with correct attributes", function (t) {
       email: "jean@gmail.com"
     } 
   }; 
-
   var wrapped = Wrapper(tree);
 
   t.same(wrapped._relativePath, "", "relative path is empty string");
@@ -31,9 +30,9 @@ test("get returns a wrapper object with updated _relativePath", function (t) {
       email: "jean@gmail.com"
     } 
   }; 
-
   var wrapped = Wrapper(tree);
   var user = get(wrapped, "user");
+
   t.same(user._relativePath, "user", "relative path is 'user'");
   t.equal(tree, user._inner, "_inner is a ref to the tree object");
   t.true(user instanceof Wrapper, "get returns an instance of wrapper");

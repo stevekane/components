@@ -18,13 +18,13 @@ var tree = {
   }
 }
 
-var wrappedTree = Wrap(tree);
+var wrappedTree = Wrapper(tree);
 
-var user = wrappedTree.get("user");
+var user = get(wrappedTree, "user");
 
 set(user, "name", "Gene Roddenberry");
 
 //tree is mutated as shown below
 
-get(tree, "user.name") //"Gene Roddenberry"
-get(user, "name") //"Gene Roddenberry"
+getValue(tree, "user.name") //"Gene Roddenberry"
+getValue(user, "name") //"Gene Roddenberry"
