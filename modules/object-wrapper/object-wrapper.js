@@ -95,6 +95,7 @@ var set = function (wrapper, path, value) {
 };
 
 //set an hash of k/v pairs on object at provided path
+//if no path, then set value to whatever is at the wrappers innerpath
 var setProperties = function (wrapper, path, hash) {
   if (!hash) {
     hash = path;  

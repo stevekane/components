@@ -16,7 +16,7 @@ var TagList = React.createClass({
       return (
         <li className="ms-tag">
           { tag.value }
-          <i className="glyphicon glyphicon-remove" onClick={removeSelf} >
+          <i className="glyphicon glyphicon-remove" onMouseDown={removeSelf} >
           </i>
         </li> 
       );
@@ -42,7 +42,7 @@ var DropDown = React.createClass({
     var renderOption = function (option, index) {
       var addSelf = partial(addSelection, option);
 
-      return <li className="ms-match" onClick={addSelf}>{ option.value }</li>;
+      return <li className="ms-match" onMouseDown={addSelf}>{ option.value }</li>;
     };
 
     var renderNoOptions = function () {

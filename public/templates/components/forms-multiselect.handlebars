@@ -21,7 +21,7 @@
   <ul class="ms-dropdown">
   {{#if widget.focused}}
     {{#each matches}}
-    <li {{bind-attr class=":ms-match active"}} {{action "addSelection" match}}>
+    <li {{bind-attr class=":ms-match active"}} {{action "addSelection" match on="mouseDown"}}>
       {{match.value}}
     </li>
     {{else}}

@@ -3,40 +3,16 @@ module.exports={
   "candidates": [
     {
       "id": "1",
-      "value": "Street Fighter IV",
-      "content": {
-        "nicknames": [
-          "SSF4",
-          "AE",
-          "AE2012"
-        ],
-        "rating": "9/10"
-      }
+      "value": "Street Fighter IV"
     },
     {
       "id": "2",
-      "value": "Ultimate Marvel vs Capcom III",
-      "content": {
-        "nicknames": [
-          "Mahvel",
-          "MvC3",
-          "UMVC"
-        ],
-        "rating": "8/10"
-      }
+      "value": "Ultimate Marvel vs Capcom III"
     },
     {
       "id": "3",
-      "value": "Super Smash Brothers Melee",
-      "content": {
-        "nicknames": [
-          "Smash",
-          "Melee",
-          "SSBM"
-        ],
-        "rating": "9/10"
-      }
-    },
+      "value": "Super Smash Brothers Melee"
+    }
   ]
 }
 
@@ -7119,7 +7095,7 @@ var TagList = React.createClass({displayName: 'TagList',
       return (
         React.DOM.li( {className:"ms-tag"}, 
            tag.value, 
-          React.DOM.i( {className:"glyphicon glyphicon-remove", onClick:removeSelf} 
+          React.DOM.i( {className:"glyphicon glyphicon-remove", onMouseDown:removeSelf} 
           )
         ) 
       );
@@ -7145,7 +7121,7 @@ var DropDown = React.createClass({displayName: 'DropDown',
     var renderOption = function (option, index) {
       var addSelf = partial(addSelection, option);
 
-      return React.DOM.li( {className:"ms-match", onClick:addSelf},  option.value );
+      return React.DOM.li( {className:"ms-match", onMouseDown:addSelf},  option.value );
     };
 
     var renderNoOptions = function () {
