@@ -107,3 +107,19 @@ test("set correctly sets a nested property on underlying data structure", functi
   
   t.same(getValue(wrapped, "user.name"), "Billy Jean", "name of nested property set correctly");
 });
+
+test("setProperties correctly sets multiple properties on data structure", function (t) {
+  t.plan(2);
+  var user = {
+    name: "Jean Rottenberries",
+    email: "jean@gmail.com"
+  }; 
+  var wrappedUser = Wrapper(user);
+  setProperties(wrappedUser, {
+    name: "Don Juan",
+    email: "dj@luv.com" 
+  });
+
+  t.same(getValue(wrappedUser, "name"), "Don Juan", "name set correctly by setProperties");
+  t.same(getValue(wrappedUser, "email"), "dj@luv.com", "email correctly by setProperties");
+});
