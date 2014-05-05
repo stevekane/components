@@ -4,6 +4,8 @@ var wrapper = require("./object-wrapper");
 var Wrapper = wrapper.Wrapper;
 var get = wrapper.get;
 var getValue = wrapper.getValue;
+var set = wrapper.set;
+var setProperties = wrapper.setProperties;
 
 test("Wrap returns an object with correct attributes", function (t) {
   t.plan(3);
@@ -70,4 +72,38 @@ test("getValue returns the value at the wrapper's relative path when no path pro
   
   t.same(tree, treeValue, "getValue returns value of wrapped object");
   t.ok(tree !== treeValue, "getValue returns value not original object");
+});
+
+test("set changes value on underlying tree", function (t) {
+  t.plan(2);
+  var tree = {
+    user: {
+      name: "Jean Rottenberries",
+      email: "jean@gmail.com"
+    } 
+  }; 
+  var newUser = {
+    name: "Bob Villa",
+    email: "lol@gmail.com" 
+  };
+  var wrapped = Wrapper(tree);
+  set(wrapped, "user", newUser);
+
+  t.same(getValue(wrapped, "user.name"), "Bob Villa", "name of user set correctly");
+  t.same(getValue(wrapped, "user.email"), "lol@gmail.com", "email of user set correctly");
+});
+
+test("set correctly sets a nested property on underlying data structure", function (t) {
+  t.plan(1);
+  var tree = {
+    user: {
+      name: "Jean Rottenberries",
+      email: "jean@gmail.com"
+    } 
+  }; 
+  var wrapped = Wrapper(tree);
+  var newName = "Billy Jean";
+  set(wrapped, "user.name", newName);
+  
+  t.same(getValue(wrapped, "user.name"), "Billy Jean", "name of nested property set correctly");
 });
