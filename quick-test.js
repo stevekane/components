@@ -30,7 +30,3 @@ set(wrappedTree, "user", newUser);
 
 var msgs = get(wrappedTree, "messages");
 var user = get(wrappedTree, "user");
-
-_.forEach(msgs, function (msg) {
-  console.log(getValue(msg));
-});

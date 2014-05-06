@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var bind = _.bind;
 var reduce = _.reduce;
 var cloneDeep = _.cloneDeep;
 var extend = _.extend;
@@ -25,23 +26,19 @@ var stringAfterLast = function (str, character) {
 //chop up a string path like "path.to.something" and return object
 var lookupOnPath = function (object, path) {
   if (!path) return object;
-  var keys = path.split(".");
+  var segments = path.split(".");
   
-  return reduce(keys, function (obj, key) {
-    return obj ? obj[key] : undefined;
+  return reduce(segments, function (obj, segment) {
+    return obj ? obj[segment] : undefined;
   }, object);
 };
 
-//finds object or value at provided combined path
+//finds object or value at provided combined path.  poor man's pattern matching
 var getFullPath = function (oldPath, newPath) {
-  var fullPath;
-
-  if (oldPath && newPath) fullPath = oldPath + "." + newPath;
-  else if (!oldPath && newPath) fullPath = newPath;
-  else if (oldPath && !newPath) fullPath = oldPath;
-  else fullPath = "";
-
-  return fullPath;
+  if (oldPath && newPath) return oldPath + "." + newPath;
+  else if (!oldPath && newPath) return newPath;
+  else if (oldPath && !newPath) return oldPath;
+  else return "";
 };
 
 /*
@@ -49,18 +46,21 @@ var getFullPath = function (oldPath, newPath) {
  * configurable allows this property to be re-assigned
  * enumerable causes the property to be listed via Object.keys
 */
-var defGetter = function (enumerable, key) {
+var defEnumerable = function (key) {
   Object.defineProperty(this, key, {
     configurable: true,
-    enumerable: enumerable,
-    get: function () {
-      return get(this, key); 
-    } 
+    enumerable: true,
+    get: bind(get, this, key)
   });
 };
 
-var defGetterEnumerable = partial(defGetter, true);
-var defGetterNoEnumerable = partial(defGetter, false);
+//define props that should not be enumerable on wrapper but still gettable
+var defNotEnumerable = function (obj, key, value) {
+  Object.defineProperty(obj, key, {
+    enumerable: false,
+    value: value 
+  }); 
+};
 
 //wraps arbitrarily nested pojo and stores relativepath
 var Wrapper = function Wrapper (ref, relativePath) {
@@ -69,40 +69,35 @@ var Wrapper = function Wrapper (ref, relativePath) {
   var refKeys = keys(target);
   
   //this is the object or primitive value at this relativePath inside ref
-  if (isArray(target)) obj = new WrappedArray(refKeys.length);
-  else if (isObject(target)) obj = new WrappedHash;
+  if (isArray(target)) obj = new ArrayWrapper(refKeys.length);
+  else if (isObject(target)) obj = new HashWrapper;
   else obj = {};
 
   //we want all keys enumerable for exposure to Array/Object methods
-  forEach(refKeys, defGetterEnumerable, obj);
+  forEach(refKeys, defEnumerable, obj);
 
   //we don't want these properties exposed to Array/Object methods
-  Object.defineProperty(obj, "_relativePath", {
-    enumerable: false,
-    value: relativePath || ""
-  });
-  Object.defineProperty(obj, "_inner", {
-    enumerable: false,
-    value: ref
-  });
-  Object.defineProperty(obj, "constructor", {
-    enumerable: false,
-    value: Wrapper
-  });
+  defNotEnumerable(obj, "_relativePath", relativePath || "");
+  defNotEnumerable(obj, "_inner", ref);
+  defNotEnumerable(obj, "constructor", Wrapper);
+
   return obj;
 };
 
 //wrapper for hashes which has Object prototype
-var WrappedHash = function WrappedHash () {};
+var HashWrapper = function HashWrapper () {};
 
-WrappedHash.prototype = Object.prototype;
+HashWrapper.prototype = Object.create(Object.prototype);
 
 //wrapper for arrays which has Array prototye
-var WrappedArray = function WrappedArray (length) {
-  this.length = length;
+var ArrayWrapper = function ArrayWrapper (length) {
+  Object.defineProperty(this, "length", {
+    enumerable: false,
+    value: length
+  });
 };
 
-WrappedHash.prototype = Array.prototype;
+ArrayWrapper.prototype = Object.create(Array.prototype);
 
 //return wrapper with updated relative path and ref to provided wrapper's ref
 var get = function (wrapper, path) {
@@ -134,7 +129,8 @@ var set = function (wrapper, path, value) {
   var last;
   var object;
 
-  /* if we have dotted path, find object before last .
+  /* 
+   * if we have dotted path, find object before last .
    * if we have a string path, set key by string name on _inner
    * else, set the value of wrapper._inner
    */
@@ -148,7 +144,8 @@ var set = function (wrapper, path, value) {
     object = wrapper._inner;
     object[fullPath] = value;
     //define a new getter for returning wrapped objects
-    defGetterEnumerable.call(wrapper, fullPath);
+    //FIXME: perhaps do not need this?  consider via tests...
+    defEnumerable.call(wrapper, fullPath);
   } else {
     wrapper._inner = value; 
   }
@@ -156,8 +153,11 @@ var set = function (wrapper, path, value) {
   return wrapper;
 };
 
-//set an hash of k/v pairs on object at provided path
-//if no path, then set value to whatever is at the wrappers innerpath
+/*
+ * if we have dotted path, find object before last .
+ * if we have a string path, set key by string name on _inner
+ * else, set the value of wrapper._inner
+ */
 var setProperties = function (wrapper, path, hash) {
   if (!hash) {
     hash = path;  
@@ -169,10 +169,6 @@ var setProperties = function (wrapper, path, hash) {
   var last;
   var object;
 
-  /* if we have dotted path, find object before last .
-   * if we have a string path, set key by string name on _inner
-   * else, set the value of wrapper._inner
-   */
   if (fullPath.indexOf(".") > -1) {
     pathExceptLastKey = stringBeforeLast(fullPath, ".");
     last = stringAfterLast(fullPath, ".");
@@ -181,6 +177,9 @@ var setProperties = function (wrapper, path, hash) {
   } else if (fullPath) {
     object = wrapper._inner;
     extend(object[fullPath], hash);
+    //define a new getter for returning wrapped objects
+    //FIXME: perhaps do not need this?  consider via tests...
+    defEnumerable.call(wrapper, fullPath);
   } else {
     extend(wrapper._inner, hash);
   }
