@@ -8,7 +8,7 @@ var set = wrapper.set;
 var setProperties = wrapper.setProperties;
 
 test("Wrap returns an object with correct attributes", function (t) {
-  t.plan(3);
+  t.plan(2);
 
   var tree = {
     user: {
@@ -20,11 +20,10 @@ test("Wrap returns an object with correct attributes", function (t) {
 
   t.same(wrapped._relativePath, "", "relative path is empty string");
   t.equal(tree, wrapped._inner, "_inner is a ref to the tree object");
-  t.true(wrapped instanceof Wrapper, "instance of Wrapper");
 });
 
 test("get returns a wrapper object with updated _relativePath", function (t) {
-  t.plan(3);
+  t.plan(2);
 
   var tree = {
     user: {
@@ -37,7 +36,6 @@ test("get returns a wrapper object with updated _relativePath", function (t) {
 
   t.same(user._relativePath, "user", "relative path is 'user'");
   t.equal(tree, user._inner, "_inner is a ref to the tree object");
-  t.true(user instanceof Wrapper, "get returns an instance of wrapper");
 });
 
 test("getValue returns the actual value of the inner reference", function (t) {
