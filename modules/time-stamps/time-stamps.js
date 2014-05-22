@@ -1,6 +1,9 @@
 var uuid = require("node-uuid");
 var _ = require("lodash");
+var contains = _.contains;
+var pluck = _.pluck;
 var find = _.find;
+var reject = _.reject;
 var cloneDeep = _.cloneDeep;
 var extend = _.extend;
 
@@ -13,19 +16,19 @@ var extend = _.extend;
  * @param {String} content content of the note
  * @param {Object} optional (Optional) hash of additional params
 */
-var Note = function (typeId, userId, timeStamp, content, optional) {
+var Note = function (noteTypeId, userId, timeStamp, content, optional) {
   var optional = optional || {};
   
   if (!content) throw new Error("Note has no content");
   if (!timeStamp) throw new Error("Note has no timestamp");
-  if (!typeId) throw new Error("Note has no typeId");
+  if (!noteTypeId) throw new Error("Note has no noteTypeId");
   if (!userId) throw new Error("Note has no userID");
 
   extend(this, {uuid: uuid.v4()}, optional);
   this.content = content;
   //timeStamp is in ms
   this.timeStamp = timeStamp;
-  this.typeId = typeId;
+  this.noteTypeId = noteTypeId;
   this.userId = userId;
 };
 
@@ -69,6 +72,25 @@ var Video = function (id, duration, optional) {
   ];
 };
 
+//HELPERS
+
+//clone array, return array w/ new member on back
+var appendTo = function (array, item) {
+  var copy = cloneDeep(array); 
+
+  copy.push(item);
+  return copy;
+};
+
+//clone array, return array w/o targeted element
+var removeFrom = function (array, prop, value) {
+  var copy = cloneDeep(array);
+
+  return reject(copy, function (each) {
+    return each[prop] === value; 
+  })
+};
+
 /*
  * All functions are transactions which return diffs
  * between the old state of the object and the new state.
@@ -85,29 +107,51 @@ var Video = function (id, duration, optional) {
  *
 * */
 
-//prevent duplicate notes
-var addNote = function (video, note) {
-  var noteAlreadyExists = !!find(video.notes, {
+/*
+ * prevent duplicate notes being added
+ * if a note is added that isn't of one of the available types
+ * we should reject it
+*/
+var addNote = function (video, note, cb) {
+  var duplicateNote = find(video.notes, {
     timeStamp: note.timeStamp,
     content: note.content,
     userId: note.userId
   });
-  var notes = cloneDeep(video.notes);
+  var validNoteTypes = pluck(video.noteTypes, "id");
+  var invalidNoteType = !contains(validNoteTypes, note.noteTypeId);
+  var noteAlreadyExists = !!duplicateNote;
+  var err;
+  var diff;
 
-  if (noteAlreadyExists) {
-    return {
-      err: "You tried to add an identical note.",
-      feedback: "You tried to add an identical note."
-    };
+  if (invalidNoteType) {
+    err = new Error("This is not a valid noteType for this video"); 
+    diff = undefined;
+  } else if (noteAlreadyExists) {
+    err = new Error("You tried to add a duplicate note"); 
+    diff = undefined;
   } else {
-    notes.push(cloneDeep(note));
-    return {
-      delta: {
-        notes: notes 
-      },
-      feedback: "Your note was added"
-    }
+    err = null;
+    diff = {notes: appendTo(video.notes, note)};
   }
+  return cb(err, diff);
+};
+
+//removes note by uuid if found
+var removeNote = function (video, uuid, cb) {
+  var targetNote = find(video.notes, {uuid: uuid});
+  var noteFound = !!targetNote;
+  var err;
+  var diff;
+
+  if (noteFound) {
+    err = null;
+    diff = {notes: removeFrom(video.notes, "uuid", uuid)};
+  } else {
+    err = new Error("No note found with uuid " + uuid); 
+    diff = undefined;
+  }
+  return cb(err, diff);
 };
 
 //Structs
@@ -117,3 +161,4 @@ module.exports.NoteType = NoteType;
 
 //transactions
 module.exports.addNote = addNote;
+module.exports.removeNote = removeNote;

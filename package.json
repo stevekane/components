@@ -26,6 +26,7 @@
     "grunt-browserify": "^2.0.8",
     "grunt-contrib-less": "^0.11.0",
     "reactify": "^0.13.1",
-    "node-uuid": "^1.4.1"
+    "node-uuid": "^1.4.1",
+    "async": "^0.8.0"
   }
 }
