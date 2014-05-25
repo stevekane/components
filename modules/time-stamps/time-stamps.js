@@ -6,159 +6,161 @@ var find = _.find;
 var reject = _.reject;
 var cloneDeep = _.cloneDeep;
 var extend = _.extend;
+var partial = _.partial;
+var appendTo = require("./utils").appendTo;
+var removeFrom = require("./utils").removeFrom;
+var mustProvide = require("./utils").mustProvide;
+var doTransIf = require("./transactions").doTransIf;
 
-/**
- * Create a note if all mandatory params are present
- *
- * @param {String} typeId type of note by id
- * @param {String} userId user id that owns this note
- * @param {Number} timeStamp timestamp in ms where this note starts
- * @param {String} content content of the note
- * @param {Object} optional (Optional) hash of additional params
-*/
-var Note = function (noteTypeId, userId, timeStamp, content, optional) {
-  var optional = optional || {};
+//STRUCTS
+var Note = function (hash) {
+  mustProvide(hash, ["content", "timeStamp", "noteTypeId", "userId"]);
+
+  var note = {};
+  var defaults = {
+    uuid: uuid.v4()
+  };
+
+  extend(note, defaults, hash);
+  return note;
+};
+
+var NoteForm = function (hash) {
+  mustProvide(hash, ["note"]);
+
+  var noteform = {};
+  var defaults = {
+    uuid: uuid.v4(),
+    defaults: {
+      noteTypeId: null,
+      content: "" 
+    },
+    fields: {
+      noteTypeId: null,
+      content: "" 
+    } 
+  };
+  var fields = {
+    noteTypeId: hash.note.noteTypeId,
+    content: hash.note.content
+  };
   
-  if (!content) throw new Error("Note has no content");
-  if (!timeStamp) throw new Error("Note has no timestamp");
-  if (!noteTypeId) throw new Error("Note has no noteTypeId");
-  if (!userId) throw new Error("Note has no userID");
-
-  extend(this, {uuid: uuid.v4()}, optional);
-  this.content = content;
-  //timeStamp is in ms
-  this.timeStamp = timeStamp;
-  this.noteTypeId = noteTypeId;
-  this.userId = userId;
+  extend(noteform, defaults);
+  extend(noteform.fields, fields);
+  return noteform;
 };
 
-//Note type must have ID for purpose of this component
-var NoteType = function (id, color, title, optional) {
-  var optional = optional || {};
+var Video = function (hash) {
+  mustProvide(hash, ["ytId", "duration"]);
 
-  if (!id) throw new Error("NoteType has no id");
-  if (!color) throw new Error("NoteType has no color");
-  if (!title) throw new Error("NoteType has no title");
+  var video = {};
+  var defaults = {
+    uuid: uuid.v4(),
+    noteTypeIds: [1, 2, 3, 4, 5, 6],
+    notes: [],
+    state: -1,
+    currentTime: 0
+  };
 
-  extend(this, {uuid: uuid.v4()}, optional);
-  this.id = id;
-  this.color = color;
-  this.title = title;
+  extend(video, defaults, hash)
+  return video;
 };
+//END STRUCTS
 
-/**
- * Create a Video object
- * From perspective of this component, video MUST have an id
- * It may optionally have an array of notes and an array of typeIds
- *
- * @param {String} id id of this video on youtube
- * @param {Number} duration duration of this video on youtube
- * @param {Object} optional (Optional) hash of additional params
-*/
-var Video = function (id, duration, optional) {
-  var optional = optional || {};
-
-  if (!id) throw new Error("Video has no id");
-  if (!duration) throw new Error("Video has no duration");
-
-  this.id = id || uuid.v4();
-  this.duration = duration;
-  this.notes = optional.notes || [];
-  this.noteTypes = optional.noteTypes || [
-    new NoteType(1, "red", "hype"),
-    new NoteType(2, "yellow", "info"),
-    new NoteType(3, "green", "marketing"),
-    new NoteType(4, "blue", "link")
-  ];
-};
-
-//HELPERS
-
-//clone array, return array w/ new member on back
-var appendTo = function (array, item) {
-  var copy = cloneDeep(array); 
-
-  copy.push(item);
-  return copy;
-};
-
-//clone array, return array w/o targeted element
-var removeFrom = function (array, prop, value) {
-  var copy = cloneDeep(array);
-
-  return reject(copy, function (each) {
-    return each[prop] === value; 
-  })
-};
-
-/*
- * All functions are transactions which return diffs
- * between the old state of the object and the new state.
- * How these diffs are used is left up to the user
- * in order to allow for the different paradigms of
- * frameworks that may wrap these functions 
- *
- * All transactions return 
- * {
- *  delta: {},
- *  feedback: "",
- *  err: null
- * }
- *
-* */
-
-/*
- * prevent duplicate notes being added
- * if a note is added that isn't of one of the available types
- * we should reject it
-*/
-var addNote = function (video, note, cb) {
+//CONDITIONALS
+var noteIsUnique = function (video, note, cb) {
   var duplicateNote = find(video.notes, {
     timeStamp: note.timeStamp,
     content: note.content,
     userId: note.userId
   });
-  var validNoteTypes = pluck(video.noteTypes, "id");
-  var invalidNoteType = !contains(validNoteTypes, note.noteTypeId);
-  var noteAlreadyExists = !!duplicateNote;
-  var err;
-  var diff;
 
-  if (invalidNoteType) {
-    err = new Error("This is not a valid noteType for this video"); 
-    diff = undefined;
-  } else if (noteAlreadyExists) {
-    err = new Error("You tried to add a duplicate note"); 
-    diff = undefined;
-  } else {
-    err = null;
-    diff = {notes: appendTo(video.notes, note)};
-  }
-  return cb(err, diff);
+  cb(!!duplicateNote ? new Error("This note already exists") : null);
+};
+
+var noteIsValidType = function (video, note, cb) {
+  var isValid = contains(video.noteTypeIds, note.noteTypeId);
+
+  cb(isValid ? null : new Error("Note is not a valid type"));
+};
+
+var noteFoundByUuid = function (video, uuid, cb) {
+  var foundNote = find(video.notes, {"uuid": uuid});
+
+  cb(!!foundNote ? null : new Error("No note found for uuid " + uuid));
+};
+
+var noteHasValidTimestamp = function (video, note, cb) {
+  var inRange = (note.timeStamp < video.duration) && (note.timeStamp >= 0);
+
+  cb(inRange ? null : new Error(note.timeStamp + " is not a valid timeStamp"));
+};
+
+var isValidLength = function (length, content, cb) {
+  cb(content.length <= length ? null : new Error("Maximum length exceeded"));
+};
+
+//END CONDITIONALS
+
+//OPERATIONS
+var appendNote = function (video, note, cb) {
+  cb(null, {
+    notes: appendTo(video.notes, note)
+  });
+};
+
+var detachNote = function (video, uuid, cb) {
+  cb(null, {
+    notes: removeFrom(video.notes, "uuid", uuid)
+  });
+};
+
+var changeNoteformContent = function (noteform, content, cb) {
+  cb(null, {
+    fields: {
+      content: content 
+    } 
+  });
+};
+//END OPERATIONS
+
+//TRANSACTIONS
+var addNote = function (video, note, cb) {
+  doTransIf(
+    partial(appendNote, video, note),
+    [
+      partial(noteHasValidTimestamp, video, note),
+      partial(noteIsValidType, video, note),
+      partial(noteIsUnique, video, note)
+    ],
+    cb
+  );
 };
 
 //removes note by uuid if found
 var removeNote = function (video, uuid, cb) {
-  var targetNote = find(video.notes, {uuid: uuid});
-  var noteFound = !!targetNote;
-  var err;
-  var diff;
-
-  if (noteFound) {
-    err = null;
-    diff = {notes: removeFrom(video.notes, "uuid", uuid)};
-  } else {
-    err = new Error("No note found with uuid " + uuid); 
-    diff = undefined;
-  }
-  return cb(err, diff);
+  doTransIf(
+    partial(detachNote, video, uuid),
+    partial(noteFoundByUuid, video, uuid),
+    cb
+  );
 };
 
-//Structs
+//update content of a noteform if length less than max
+var updateNoteformContent = function (noteform, content, cb) {
+  doTransIf(
+    partial(changeNoteformContent, noteform, content),
+    partial(isValidLength, 80, content),
+    cb
+  );
+};
+
+//END TRANSACTIONS
+
 module.exports.Video = Video;
 module.exports.Note = Note;
-module.exports.NoteType = NoteType;
+module.exports.NoteForm = NoteForm;
 
-//transactions
 module.exports.addNote = addNote;
 module.exports.removeNote = removeNote;
+module.exports.updateNoteformContent = updateNoteformContent;

@@ -1,50 +1,64 @@
-var async = require('async');
+var async = require("async");
 var _ = require("lodash");
-var pluck = _.pluck;
-var find = _.find;
 var extend = _.extend;
 var partial = _.partial;
-var partialRight = _.partialRight;
 var ts = require('./time-stamps');
 var Video = ts.Video;
 var Note = ts.Note;
-var NoteType = ts.NoteType;
+var NoteForm = ts.NoteForm;
 var addNote = ts.addNote;
 var removeNote = ts.removeNote;
+var updateNoteformContent = ts.updateNoteformContent;
+var log = require("./utils").log;
+var doTransIf = require("./transactions").doTransIf;
 
-//pretty print full object
-var log = function (hash) {
-  if (hash instanceof Error) console.log(hash.stack);
-  else console.log(JSON.stringify(hash, null, 2));
-};
-
-//video of infiltration vs kbrad
-var ytId = "iMsMH6A03M8";
-
-var video = new Video(ytId, 1380000);
-
-var firstNote = new Note(1, 2, 20000, "Best fight evar");
-var secondNote = new Note(1, 1, 30000, "Worst thing happened");
-var invalidNote = new Note(6, 1, 45000, "Not gonna happen");
-
-addNote(video, firstNote, function (err, res) {
-  video.notes = res.notes;
-  addNote(video, invalidNote, function (err, res) {
-    log(err);
-    //video.notes = res.notes;
-    //log(video);
-  });
-  var noteToRemove = find(video.notes, {uuid: video.notes[0].uuid});
-
-  //log(noteToRemove);
-  removeNote(video, noteToRemove.uuid, function (err, res) {
-    video.notes = res.notes;
-    log(video);
-  });
+var video = Video({
+  ytId: "iMsMH6A03M8",
+  duration: 1380000
 });
 
-var updateNotes = function (err, diff, cb) {
-  if (err) log(err); 
-  else video.notes = diff.notes;
-  if (cb) cb();
+var note1 = Note({
+  content: "pretty sun dress",
+  timeStamp: 13000,
+  noteTypeId: 1,
+  userId: 1
+});
+
+var note2 = Note({
+  content: "hot pants",
+  timeStamp: 18000,
+  noteTypeId: 2,
+  userId: 1
+});
+
+var noteForm = NoteForm({
+  note: note1
+});
+
+var addAndUpdate = function (video, note, cb) {
+  addNote(video, note, function (err, diff) {
+    if (err) return log(err);
+    else cb(null, extend(video, diff));
+  });
 };
+
+var updateFormContent = function (noteform, content, cb) {
+  updateNoteformContent(noteform, content, function (err, diff) {
+    if (err) {
+      return log(err); 
+    } else {
+      noteform.fields.content = diff.fields.content;
+      cb(null, noteform);
+    }
+  });
+};
+
+async.series([
+  partial(addAndUpdate, video, note1),
+  partial(addAndUpdate, video, note2),
+  partial(updateFormContent, noteForm, "updated")
+], function (err) {
+  log(err);
+  log(video);
+  log(noteForm);
+});
