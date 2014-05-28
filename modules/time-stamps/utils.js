@@ -1,7 +1,9 @@
-var _ = require("lodash")
+var async = require("async")
+  , _ = require("lodash")
   , forEach = _.forEach
   , cloneDeep = _.cloneDeep
   , reject = _.reject
+  , isArray = _.isArray
 
 var appendTo = function (array, item) {
   var copy = cloneDeep(array); 
@@ -32,7 +34,23 @@ var log = function (hash) {
   else console.log(JSON.stringify(hash, null, 2));
 };
 
+var doTransIf = function (transaction, conditionals, cb) {
+  if (isArray(conditionals)) {
+    async.series(conditionals, function (err) {
+      if (err) return cb(err);
+      else transaction(cb);
+    });
+  } else {
+    conditionals(function (err) {
+      if (err) return cb(err);
+      else transaction(cb);
+    }); 
+  }
+};
+
+
 module.exports.appendTo = appendTo;
 module.exports.removeFrom = removeFrom;
 module.exports.mustProvide = mustProvide;
 module.exports.log = log;
+module.exports.doTransIf = doTransIf;
