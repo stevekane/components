@@ -8,6 +8,7 @@
 
 @light-gray: lighten(gray, 30%);
 @yt-lightgray: #ccc;
+@yt-mediumgray: #444;
 @yt-gray: #1b1b1b;
 @blue: #3498db;
 @red: #e74c3c;
@@ -121,13 +122,13 @@ li {
         .size(100%, 2px);
         position: absolute;
         top: 9px;
-        &.author {
+        &.comments {
           background-color: @red;
         }
-        &.global {
+        &.videos {
           background-color: @orange;
         }
-        &.personal {
+        &.products {
           background-color: @yellow;
         }
       }
@@ -136,22 +137,79 @@ li {
   .active-comments-container {
     padding: 10px;
     width: 100%;
+    height: 200px;
     .active-comment-container {
       padding: 10px;
       .title {
         margin-bottom: 10px;
-        color: @yt-lightgray;
+        color: white;
+        text-align: center;
+        padding: 4px;
+        text-transform: uppercase;
+        i {
+          margin-right: 4px;
+        }
+        &.comments {
+          background-color: @red;
+        }
+        &.videos {
+          background-color: @orange;
+        }
+        &.products {
+          background-color: @yellow;
+        }
       }
       display: inline-block;
+      float: left;
       color: white;
-      width: 260px;
+      width: 33.33%;
       .title {
+        display: block;
+        height: 40px;
+        padding-top: 10px;
         border: none !important;
+        margin-bottom: 0px;
+        font-size: 16px;
       }
-      ul {
+      .contents {
         height: 125px;
-        li {
-          margin: 4px 0px;
+        width: 100%;
+        background-color: white;
+        padding: 4px;
+        color: @yt-gray;
+        p {
+          margin: 10px; 
+        }
+        .video-thumbnail {
+          width: 100%;
+          height: 100%;
+        }
+        .thumbnail {
+          margin-left: auto;
+          margin-right: auto;
+          height: 100%;
+        }
+        .profile-header {
+          .profile-image {
+            height: 30px;
+            width: 30px;
+            border-radius: 15px;
+            display: inline-block;
+            vertical-align: middle;
+          }
+          .profile-details {
+            display: inline-block;
+            margin-left: 8px;
+            vertical-align: middle;
+            .profile-name {
+              text-decoration: none;
+            }
+            .comment-date {
+              margin: 0px;
+              font-size: 10px;
+              color: @yt-mediumgray;
+            }
+          }
         }
       }
     }
@@ -167,19 +225,19 @@ li {
     top: 6px;
     border-radius: 10px;
     background-color: @yt-gray;
-    &.author {
+    &.comments {
       border: 1px solid @red;
       &.active {
         background-color: @red;
       }
     }
-    &.global {
+    &.videos {
       border: 1px solid @orange;
       &.active {
         background-color: @orange;
       }
     }
-    &.personal {
+    &.products {
       border: 1px solid @yellow;
       &.active {
         background-color: @yellow;

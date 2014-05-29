@@ -11,33 +11,55 @@ html(lang=en)
         allowfullscreen)
 
       .timelines-container
-        .slider
+        .slider.active
         .timeline-container
-          .midline.author
+          .midline.comments
           ul.timeline-tags
-            li.author(style="left: 10%; width: 50px;")
-            li.author(style="left: 25%; width: 35px;")
-            li.author(style="left: 50%; width: 75px;")
-            li.author.active(style="left: 80%; width: 100px;")
+            li.comments(style="left: 10%; width: 50px;")
+            li.comments(style="left: 25%; width: 35px;")
+            li.comments(style="left: 50%; width: 75px;")
+            li.comments.active(style="left: 80%; width: 100px;")
         .timeline-container
-          .midline.global
+          .midline.videos
           ul.timeline-tags
-            li.global(style="left: 5%;  width: 25px;")
-            li.global(style="left: 60%; width: 55px;")
-            li.global.active(style="left: 68%; width: 120px;")
+            li.videos(style="left: 5%;  width: 25px;")
+            li.videos(style="left: 60%; width: 55px;")
+            li.videos.active(style="left: 68%; width: 120px;")
         .timeline-container
-          .midline.personal
+          .midline.products
           ul.timeline-tags
-            li.personal(style="left: 15%; width: 25px;")
-            li.personal(style="left: 35%; width: 55px;")
-            li.personal(style="left: 70%; width: 48px;")
-            li.personal.active(style="left: 80%; width: 55px;")
-            li.personal(style="left: 90%; width: 75px;")
+            li.products(style="left: 15%; width: 25px;")
+            li.products(style="left: 35%; width: 55px;")
+            li.products(style="left: 70%; width: 48px;")
+            li.products.active(style="left: 80%; width: 55px;")
+            li.products(style="left: 90%; width: 75px;")
 
       .active-comments-container
         .active-comment-container
-          .title.author from the author
+          .title.comments 
+            i.glyphicon.glyphicon-comment
+            span comments
+          .contents
+            .profile-header
+              img.profile-image(src="https://lh4.googleusercontent.com/-M3QZzLiIxo4/AAAAAAAAAAI/AAAAAAAAA6E/SaHmuMf9Ekg/s24-c-k-no/photo.jpg")
+              .profile-details
+                a.profile-name(href="#") Steve Kane
+                p.comment-date Sept. 5, 2013
+            p blah blah blah I have so much to say you guys this is really great that I have this platform to voice my opinions
+            
         .active-comment-container
-          .title.global everyone's comments
+          .title.videos
+            i.glyphicon.glyphicon-film
+            span videos
+          .contents
+            iframe.video-thumbnail(
+              src="//www.youtube.com/embed/LEc3gMjhF44?rel=0", 
+              frameborder="0",
+              allowfullscreen)
+
         .active-comment-container
-          .title.personal personal comments
+          .title.products
+            i.glyphicon.glyphicon-shopping-cart
+            span products
+          .contents
+            img.thumbnail(src="http://static-cdn.jtvnw.net/jtv_user_pictures/panel-10332629-image-c54e8750e40b3dcc-320.jpeg")
