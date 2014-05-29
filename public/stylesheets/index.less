@@ -11,9 +11,16 @@
 @yt-mediumgray: #444;
 @yt-gray: #1b1b1b;
 @blue: #3498db;
+@purple: #bf55ec;
+@green: #3fc380;
 @red: #e74c3c;
 @orange: #e67e22;
 @yellow: #f1c40f;
+
+@comments-color: @purple;
+@videos-color: @blue;
+@products-color: @green;
+@link-color: @blue;
 
 * {
   box-sizing: border-box;
@@ -123,13 +130,13 @@ li {
         position: absolute;
         top: 9px;
         &.comments {
-          background-color: @red;
+          background-color: @comments-color;
         }
         &.videos {
-          background-color: @orange;
+          background-color: @videos-color;
         }
         &.products {
-          background-color: @yellow;
+          background-color: @products-color;
         }
       }
     }
@@ -150,13 +157,13 @@ li {
           margin-right: 4px;
         }
         &.comments {
-          background-color: @red;
+          background-color: @comments-color;
         }
         &.videos {
-          background-color: @orange;
+          background-color: @videos-color;
         }
         &.products {
-          background-color: @yellow;
+          background-color: @products-color;
         }
       }
       display: inline-block;
@@ -177,6 +184,8 @@ li {
         background-color: white;
         padding: 4px;
         color: @yt-gray;
+        overflow: hidden;
+        transition: content 2s ease;
         p {
           margin: 10px; 
         }
@@ -185,9 +194,11 @@ li {
           height: 100%;
         }
         .thumbnail {
+          display: block;
           margin-left: auto;
           margin-right: auto;
           height: 100%;
+          border-radius: 100px;
         }
         .profile-header {
           .profile-image {
@@ -203,6 +214,7 @@ li {
             vertical-align: middle;
             .profile-name {
               text-decoration: none;
+              color: @link-color;
             }
             .comment-date {
               margin: 0px;
@@ -226,21 +238,21 @@ li {
     border-radius: 10px;
     background-color: @yt-gray;
     &.comments {
-      border: 1px solid @red;
+      border: 1px solid @comments-color;
       &.active {
-        background-color: @red;
+        background-color: @comments-color;
       }
     }
     &.videos {
-      border: 1px solid @orange;
+      border: 1px solid @videos-color;
       &.active {
-        background-color: @orange;
+        background-color: @videos-color;
       }
     }
     &.products {
-      border: 1px solid @yellow;
+      border: 1px solid @products-color;
       &.active {
-        background-color: @yellow;
+        background-color: @products-color;
       }
     }
   }

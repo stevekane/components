@@ -1453,13 +1453,13 @@ li {
   top: 9px;
 }
 .video-container .timelines-container .timeline-container .midline.comments {
-  background-color: #e74c3c;
+  background-color: #bf55ec;
 }
 .video-container .timelines-container .timeline-container .midline.videos {
-  background-color: #e67e22;
+  background-color: #3498db;
 }
 .video-container .timelines-container .timeline-container .midline.products {
-  background-color: #f1c40f;
+  background-color: #3fc380;
 }
 .video-container .active-comments-container {
   padding: 10px;
@@ -1484,13 +1484,13 @@ li {
   margin-right: 4px;
 }
 .video-container .active-comments-container .active-comment-container .title.comments {
-  background-color: #e74c3c;
+  background-color: #bf55ec;
 }
 .video-container .active-comments-container .active-comment-container .title.videos {
-  background-color: #e67e22;
+  background-color: #3498db;
 }
 .video-container .active-comments-container .active-comment-container .title.products {
-  background-color: #f1c40f;
+  background-color: #3fc380;
 }
 .video-container .active-comments-container .active-comment-container .title {
   display: block;
@@ -1506,6 +1506,8 @@ li {
   background-color: white;
   padding: 4px;
   color: #1b1b1b;
+  overflow: hidden;
+  transition: content 2s ease;
 }
 .video-container .active-comments-container .active-comment-container .contents p {
   margin: 10px;
@@ -1515,9 +1517,11 @@ li {
   height: 100%;
 }
 .video-container .active-comments-container .active-comment-container .contents .thumbnail {
+  display: block;
   margin-left: auto;
   margin-right: auto;
   height: 100%;
+  border-radius: 100px;
 }
 .video-container .active-comments-container .active-comment-container .contents .profile-header .profile-image {
   height: 30px;
@@ -1533,6 +1537,7 @@ li {
 }
 .video-container .active-comments-container .active-comment-container .contents .profile-header .profile-details .profile-name {
   text-decoration: none;
+  color: #3498db;
 }
 .video-container .active-comments-container .active-comment-container .contents .profile-header .profile-details .comment-date {
   margin: 0px;
@@ -1552,22 +1557,22 @@ li {
   background-color: #1b1b1b;
 }
 .timeline-tags li.comments {
-  border: 1px solid #e74c3c;
+  border: 1px solid #bf55ec;
 }
 .timeline-tags li.comments.active {
-  background-color: #e74c3c;
+  background-color: #bf55ec;
 }
 .timeline-tags li.videos {
-  border: 1px solid #e67e22;
+  border: 1px solid #3498db;
 }
 .timeline-tags li.videos.active {
-  background-color: #e67e22;
+  background-color: #3498db;
 }
 .timeline-tags li.products {
-  border: 1px solid #f1c40f;
+  border: 1px solid #3fc380;
 }
 .timeline-tags li.products.active {
-  background-color: #f1c40f;
+  background-color: #3fc380;
 }
 @-webkit-keyframes slide {
   from {
