@@ -23,6 +23,10 @@ app.get("/", function (req, res) {
   res.render("index", widget);
 });
 
+app.get("/timestamps", function (req, res) {
+  res.render("timestamps");
+});
+
 app.use(ecstatic({root: __dirname + "/public"}));
 
 app.listen(5000);

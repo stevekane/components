@@ -7,10 +7,17 @@
 @import "glyphicons.less";
 
 @light-gray: lighten(gray, 30%);
+@yt-lightgray: #ccc;
+@yt-gray: #1b1b1b;
+@blue: #3498db;
+@red: #e74c3c;
+@orange: #e67e22;
+@yellow: #f1c40f;
 
 * {
   box-sizing: border-box;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 13px;
 }
 
 html, body {
@@ -84,5 +91,108 @@ li {
       padding-left: 4px;
       padding-right: 4px;
     }
+  }
+}
+
+.video-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+  background-color: @yt-gray;
+  .player {
+    .size(100%, 400px);
+  }  
+  .timelines-container {
+    position: relative;
+    .slider {
+      .size(2px, 60px);
+      position: absolute;
+      z-index: 99;
+      background-color: @yt-lightgray;
+      .translate(630px, 0px);
+      &.active {
+        .animation(slide 30s linear infinite);
+      }
+    }
+    .timeline-container {
+      .size(100%, 20px);
+      position: relative;
+      .midline {
+        .size(100%, 2px);
+        position: absolute;
+        top: 9px;
+        &.author {
+          background-color: @red;
+        }
+        &.global {
+          background-color: @orange;
+        }
+        &.personal {
+          background-color: @yellow;
+        }
+      }
+    }
+  }
+  .active-comments-container {
+    padding: 10px;
+    width: 100%;
+    .active-comment-container {
+      padding: 10px;
+      .title {
+        margin-bottom: 10px;
+        color: @yt-lightgray;
+      }
+      display: inline-block;
+      color: white;
+      width: 260px;
+      .title {
+        border: none !important;
+      }
+      ul {
+        height: 125px;
+        li {
+          margin: 4px 0px;
+        }
+      }
+    }
+  }
+}
+
+.timeline-tags {
+  .size(100%, 100%);
+  position: absolute;
+  li {
+    height: 8px;
+    position: absolute;
+    top: 6px;
+    border-radius: 10px;
+    background-color: @yt-gray;
+    &.author {
+      border: 1px solid @red;
+      &.active {
+        background-color: @red;
+      }
+    }
+    &.global {
+      border: 1px solid @orange;
+      &.active {
+        background-color: @orange;
+      }
+    }
+    &.personal {
+      border: 1px solid @yellow;
+      &.active {
+        background-color: @yellow;
+      }
+    }
+  }
+}
+
+@-webkit-keyframes slide {
+  from {
+    .translate(0px, 0px);
+  }
+  to {
+    .translate(780px, 0px);
   }
 }

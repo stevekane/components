@@ -1,0 +1,43 @@
+doctype html
+html(lang=en)
+  head
+    title Component examples
+    link(rel="stylesheet", type="text/css", href="/dist/index.css")
+  body
+    .video-container
+      iframe.player(
+        src="//www.youtube.com/embed/LEc3gMjhF44?rel=0", 
+        frameborder="0",
+        allowfullscreen)
+
+      .timelines-container
+        .slider
+        .timeline-container
+          .midline.author
+          ul.timeline-tags
+            li.author(style="left: 10%; width: 50px;")
+            li.author(style="left: 25%; width: 35px;")
+            li.author(style="left: 50%; width: 75px;")
+            li.author.active(style="left: 80%; width: 100px;")
+        .timeline-container
+          .midline.global
+          ul.timeline-tags
+            li.global(style="left: 5%;  width: 25px;")
+            li.global(style="left: 60%; width: 55px;")
+            li.global.active(style="left: 68%; width: 120px;")
+        .timeline-container
+          .midline.personal
+          ul.timeline-tags
+            li.personal(style="left: 15%; width: 25px;")
+            li.personal(style="left: 35%; width: 55px;")
+            li.personal(style="left: 70%; width: 48px;")
+            li.personal.active(style="left: 80%; width: 55px;")
+            li.personal(style="left: 90%; width: 75px;")
+
+      .active-comments-container
+        .active-comment-container
+          .title.author from the author
+        .active-comment-container
+          .title.global everyone's comments
+        .active-comment-container
+          .title.personal personal comments
