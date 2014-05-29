@@ -1438,8 +1438,8 @@ li {
   transform: translate(630px, 0px);
 }
 .video-container .timelines-container .slider.active {
-  -webkit-animation: slide 30s linear infinite;
-  animation: slide 30s linear infinite;
+  -webkit-animation: slide 109s linear infinite;
+  animation: slide 109s linear infinite;
 }
 .video-container .timelines-container .timeline-container {
   width: 100%;
@@ -1468,17 +1468,20 @@ li {
 }
 .video-container .active-comments-container .active-comment-container {
   padding: 10px;
-  display: inline-block;
-  float: left;
-  color: white;
   width: 33.33%;
+  float: left;
+  display: inline-block;
 }
 .video-container .active-comments-container .active-comment-container .title {
-  margin-bottom: 10px;
-  color: white;
-  text-align: center;
+  display: block;
   padding: 4px;
-  text-transform: uppercase;
+  text-align: center;
+  color: white;
+  height: 40px;
+  padding-top: 10px;
+  border: none !important;
+  margin-bottom: 0px;
+  font-size: 16px;
 }
 .video-container .active-comments-container .active-comment-container .title i {
   margin-right: 4px;
@@ -1492,22 +1495,27 @@ li {
 .video-container .active-comments-container .active-comment-container .title.products {
   background-color: #3fc380;
 }
-.video-container .active-comments-container .active-comment-container .title {
-  display: block;
-  height: 40px;
-  padding-top: 10px;
-  border: none !important;
-  margin-bottom: 0px;
-  font-size: 16px;
-}
 .video-container .active-comments-container .active-comment-container .contents {
   height: 125px;
-  width: 100%;
   background-color: white;
   padding: 4px;
   color: #1b1b1b;
   overflow: hidden;
-  transition: content 2s ease;
+  opacity: 1.0;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+}
+.video-container .active-comments-container .active-comment-container .contents.comments {
+  -webkit-animation: comment-timeline 109s linear infinite;
+  animation: comment-timeline 109s linear infinite;
+}
+.video-container .active-comments-container .active-comment-container .contents.videos {
+  -webkit-animation: video-timeline 109s linear infinite;
+  animation: video-timeline 109s linear infinite;
+}
+.video-container .active-comments-container .active-comment-container .contents.products {
+  -webkit-animation: product-timeline 109s linear infinite;
+  animation: product-timeline 109s linear infinite;
 }
 .video-container .active-comments-container .active-comment-container .contents p {
   margin: 10px;
@@ -1584,5 +1592,161 @@ li {
     -webkit-transform: translate(780px, 0px);
     -ms-transform: translate(780px, 0px);
     transform: translate(780px, 0px);
+  }
+}
+@-webkit-keyframes comment-timeline {
+  0% {
+    opacity: 0.0;
+  }
+  10% {
+    opacity: 0.0;
+  }
+  11% {
+    opacity: 1.0;
+  }
+  17% {
+    opacity: 1.0;
+  }
+  18% {
+    opacity: 0.0;
+  }
+  26% {
+    opacity: 0;
+  }
+  27% {
+    opacity: 1.0;
+  }
+  30% {
+    opacity: 1.0;
+  }
+  31% {
+    opacity: 0.0;
+  }
+  50% {
+    opacity: 0.0;
+  }
+  51% {
+    opacity: 1.0;
+  }
+  60% {
+    opacity: 1.0;
+  }
+  61% {
+    opacity: 0.0;
+  }
+  82% {
+    opacity: 0.0;
+  }
+  83% {
+    opacity: 1.0;
+  }
+  94% {
+    opacity: 1.0;
+  }
+  95% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 0.0;
+  }
+}
+@-webkit-keyframes video-timeline {
+  0% {
+    opacity: 0.0;
+  }
+  5% {
+    opacity: 0.0;
+  }
+  6% {
+    opacity: 1.0;
+  }
+  8% {
+    opacity: 1.0;
+  }
+  9% {
+    opacity: 0.0;
+  }
+  60% {
+    opacity: 0;
+  }
+  61% {
+    opacity: 1.0;
+  }
+  67% {
+    opacity: 1.0;
+  }
+  68% {
+    opacity: 0.0;
+  }
+  70% {
+    opacity: 0.0;
+  }
+  71% {
+    opacity: 1.0;
+  }
+  83% {
+    opacity: 1.0;
+  }
+  84% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 0.0;
+  }
+}
+@-webkit-keyframes product-timeline {
+  0% {
+    opacity: 0.0;
+  }
+  16% {
+    opacity: 0.0;
+  }
+  17% {
+    opacity: 1.0;
+  }
+  18% {
+    opacity: 1.0;
+  }
+  19% {
+    opacity: 0.0;
+  }
+  35% {
+    opacity: 0;
+  }
+  36% {
+    opacity: 1.0;
+  }
+  41% {
+    opacity: 1.0;
+  }
+  42% {
+    opacity: 0.0;
+  }
+  72% {
+    opacity: 0.0;
+  }
+  73% {
+    opacity: 1.0;
+  }
+  77% {
+    opacity: 1.0;
+  }
+  78% {
+    opacity: 0.0;
+  }
+  83% {
+    opacity: 0.0;
+  }
+  84% {
+    opacity: 1.0;
+  }
+  89% {
+    opacity: 1.0;
+  }
+  90% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 0.0;
   }
 }

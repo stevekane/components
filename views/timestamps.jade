@@ -6,7 +6,7 @@ html(lang=en)
   body
     .video-container
       iframe.player(
-        src="//www.youtube.com/embed/8CkxN25GhHE?rel=0", 
+        src="//www.youtube.com/embed/d2JzH_XTj0c?rel=0&autoplay=1", 
         frameborder="0",
         allowfullscreen)
 
@@ -18,40 +18,39 @@ html(lang=en)
             li.comments(style="left: 10%; width: 50px;")
             li.comments(style="left: 25%; width: 35px;")
             li.comments(style="left: 50%; width: 75px;")
-            li.comments.active(style="left: 80%; width: 100px;")
+            li.comments(style="left: 80%; width: 100px;")
         .timeline-container
           .midline.videos
           ul.timeline-tags
             li.videos(style="left: 5%;  width: 25px;")
             li.videos(style="left: 60%; width: 55px;")
-            li.videos.active(style="left: 68%; width: 120px;")
+            li.videos(style="left: 68%; width: 120px;")
         .timeline-container
           .midline.products
           ul.timeline-tags
             li.products(style="left: 15%; width: 25px;")
             li.products(style="left: 35%; width: 55px;")
             li.products(style="left: 70%; width: 48px;")
-            li.products.active(style="left: 80%; width: 55px;")
-            li.products(style="left: 90%; width: 75px;")
+            li.products(style="left: 80%; width: 55px;")
 
       .active-comments-container
         .active-comment-container
           .title.comments 
             i.glyphicon.glyphicon-comment
-            span comments
-          .contents
+            span Comments
+          .contents.comments
             .profile-header
               img.profile-image(src="https://lh4.googleusercontent.com/-M3QZzLiIxo4/AAAAAAAAAAI/AAAAAAAAA6E/SaHmuMf9Ekg/s24-c-k-no/photo.jpg")
               .profile-details
                 a.profile-name(href="#") Steve Kane
                 p.comment-date Sept. 5, 2013
-            p blah blah blah I have so much to say you guys this is really great that I have this platform to voice my opinions
+            p blah blah blah I have so much to say you guys this is really great that I have this platform to voice my opinions on!
             
         .active-comment-container
           .title.videos
             i.glyphicon.glyphicon-film
-            span videos
-          .contents
+            span Videos
+          .contents.videos
             iframe.video-thumbnail(
               src="//www.youtube.com/embed/C1tWgWVSLAY?rel=0", 
               frameborder="0",
@@ -60,6 +59,9 @@ html(lang=en)
         .active-comment-container
           .title.products
             i.glyphicon.glyphicon-shopping-cart
-            span products
-          .contents
+            span Products
+          .contents.products
             img.thumbnail(src="https://slm-assets2.secondlife.com/assets/7060694/lightbox/Wrap_Front_Roll_Neck_Cropped_Sweater.jpg?1359472383")
+
+    script(src="/vendor/jquery.js")
+    #script(src="/dist/quickhack.js")
