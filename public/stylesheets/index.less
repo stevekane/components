@@ -105,15 +105,16 @@ li {
 .video-container {
   margin-left: auto;
   margin-right: auto;
-  width: 800px;
+  width: 640px;
   background-color: @yt-gray;
   .player {
-    .size(100%, 400px);
+    .size(100%, 360px);
   }  
   .timelines-container {
     position: relative;
+    margin: 4px 0px;
     .slider {
-      .size(2px, 60px);
+      .size(2px, 30px);
       position: absolute;
       z-index: 99;
       background-color: @yt-lightgray;
@@ -123,12 +124,12 @@ li {
       }
     }
     .timeline-container {
-      .size(100%, 20px);
+      .size(100%, 10px);
       position: relative;
       .midline {
         .size(100%, 2px);
         position: absolute;
-        top: 9px;
+        top: 4px;
         &.comments {
           background-color: @comments-color;
         }
@@ -137,45 +138,105 @@ li {
         }
         &.products {
           background-color: @products-color;
+        }
+      }
+      .timeline-tags {
+        .size(100%, 100%);
+        position: absolute;
+        li {
+          height: 8px;
+          position: absolute;
+          top: 1px;
+          border-radius: 10px;
+          background-color: @yt-gray;
+          &.comments {
+            border: 1px solid @comments-color;
+            &.active {
+              background-color: @comments-color;
+            }
+          }
+          &.videos {
+            border: 1px solid @videos-color;
+            &.active {
+              background-color: @videos-color;
+            }
+          }
+          &.products {
+            border: 1px solid @products-color;
+            &.active {
+              background-color: @products-color;
+            }
+          }
         }
       }
     }
   }
+
   .active-comments-container {
-    padding: 10px;
     width: 100%;
     height: 200px;
     .active-comment-container {
-      padding: 10px;
+      padding: 4px;
       width: 33.33%;
       float: left;
       display: inline-block;
 
-      .title {
-        display: block;
-        padding: 4px;
-        text-align: center;
-        color: white;
-        height: 40px;
-        padding-top: 10px;
-        border: none !important;
-        margin-bottom: 0px;
-        font-size: 16px;
-        i {
-          margin-right: 4px;
+      .header-container {
+        height: 30px;
+        width: 100%;
+        .list-button {
+          width: 20%;
+          height: 30px;
+          display: inline-block;
+          float: left;
+          text-align: center;
+          padding: 6px 4px 4px 4px;
+          color: white;
+          &.comments {
+            background-color: darken(@comments-color, 10%);
+            &:hover {
+              background-color: @comments-color;
+            }
+          }
+          &.videos {
+            background-color: darken(@videos-color, 10%);
+            &:hover {
+              background-color: @videos-color;
+            }
+          }
+          &.products {
+            background-color: darken(@products-color, 10%);
+            &:hover {
+              background-color: @products-color;
+            }
+          }
         }
-        &.comments {
-          background-color: @comments-color;
-        }
-        &.videos {
-          background-color: @videos-color;
-        }
-        &.products {
-          background-color: @products-color;
+        .title {
+          float: left;
+          display: inline-block;
+          color: white;
+          border: none !important;
+          padding: 4px;
+          margin-bottom: 0px;
+          font-size: 16px;
+          height: 30px;
+          width: 80%;
+          i {
+            margin: 0px 6px;
+          }
+          &.comments {
+            background-color: @comments-color;
+          }
+          &.videos {
+            background-color: @videos-color;
+          }
+          &.products {
+            background-color: @products-color;
+          }
         }
       }
       .contents {
-        height: 125px;
+        height: 162px;
         background-color: white;
         padding: 4px;
         color: @yt-gray;
@@ -234,42 +295,12 @@ li {
   }
 }
 
-.timeline-tags {
-  .size(100%, 100%);
-  position: absolute;
-  li {
-    height: 8px;
-    position: absolute;
-    top: 6px;
-    border-radius: 10px;
-    background-color: @yt-gray;
-    &.comments {
-      border: 1px solid @comments-color;
-      &.active {
-        background-color: @comments-color;
-      }
-    }
-    &.videos {
-      border: 1px solid @videos-color;
-      &.active {
-        background-color: @videos-color;
-      }
-    }
-    &.products {
-      border: 1px solid @products-color;
-      &.active {
-        background-color: @products-color;
-      }
-    }
-  }
-}
-
 @-webkit-keyframes slide {
   from {
     .translate(0px, 0px);
   }
   to {
-    .translate(780px, 0px);
+    .translate(640px, 0px);
   }
 }
 

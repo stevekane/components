@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0-1",
+  "version": "0.0.0-2",
   "description": "Example project of building components using a functional framework agnostic style",
   "main": "server.js",
   "scripts": {
